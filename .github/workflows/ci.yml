@@ -1,0 +1,167 @@
+name: CI
+
+# Runs on pull requests, and is called by docker-publish.yml before anything is published
+# (so a push to main is tested once, there).
+on:
+  pull_request:
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '24'
+
+jobs:
+  checks:
+    name: Format, types, lint and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: |
+            backend/pnpm-lock.yaml
+            frontend/pnpm-lock.yaml
+
+      - name: Install
+        run: |
+          pnpm -C backend install --frozen-lockfile
+          pnpm -C backend run generate
+          pnpm -C frontend install --frozen-lockfile
+
+      - name: Format
+        run: pnpm run format:check
+
+      - name: Types
+        run: pnpm run typecheck
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Unit tests
+        run: pnpm run test
+
+      - name: Frontend build
+        run: pnpm -C frontend run build
+
+  integration:
+    name: Backend integration tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      storage:
+        image: rustfs/rustfs@sha256:9ca9559533b537d10482fe923288b676ad08f92a7069d9a17327fbae3cab688b
+        env:
+          RUSTFS_ACCESS_KEY: minioadmin
+          RUSTFS_SECRET_KEY: minioadminpassword
+          RUSTFS_ADDRESS: 0.0.0.0:9000
+        ports:
+          - 9000:9000
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+      TEST_S3_ENDPOINT: http://127.0.0.1:9000
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: backend/pnpm-lock.yaml
+
+      - run: |
+          pnpm -C backend install --frozen-lockfile
+          pnpm -C backend run generate
+
+      - run: pnpm -C backend run test:integration
+
+  e2e:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - run: pnpm -C frontend install --frozen-lockfile
+
+      - name: Start the stack
+        # With no .env the stack starts with the dev login on and request limits off, which is
+        # what the specs need (frontend/e2e/README.md).
+        run: docker compose up -d --build db storage backend frontend
+
+      - name: Wait for the stack
+        run: |
+          for _ in $(seq 1 90); do
+            curl -fsS http://localhost:3000/api/health >/dev/null 2>&1 \
+              && curl -fsS http://localhost:5173 >/dev/null 2>&1 && exit 0
+            sleep 2
+          done
+          docker compose logs --tail 80
+          exit 1
+
+      - run: pnpm -C frontend exec playwright install --with-deps chromium
+
+      - run: pnpm run test:e2e
+
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs --tail 200
+
+  image:
+    name: Production image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: |
+            backend/pnpm-lock.yaml
+            frontend/pnpm-lock.yaml
+
+      - run: |
+          pnpm -C backend install --frozen-lockfile
+          pnpm -C backend run generate
+          pnpm -C frontend install --frozen-lockfile
+
+      - name: Build and static-serving checks
+        run: npm run test:prod-container
+
+      - name: Build the image
+        run: docker build -t canvhq:ci .
+
+      - name: Boot the image through its entrypoint
+        run: scripts/smoke-test-image.sh canvhq:ci

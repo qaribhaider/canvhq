@@ -1,0 +1,17 @@
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true
+  '@scarf/scarf': false
+
+# Patched releases of two transitive packages with denial-of-service advisories (express's body
+# parser and multer). Drop these when @nestjs/platform-express depends on the patched versions.
+overrides:
+  body-parser: '>=2.4.0'
+  multer: '>=2.5.0'
+
+peerDependencyRules:
+  allowedVersions:
+    nestjs-zod>@nestjs/common: '12'
+    nestjs-zod>@nestjs/swagger: '12'
+    tsconfck>typescript: '6'

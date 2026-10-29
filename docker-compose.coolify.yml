@@ -1,0 +1,81 @@
+# ==============================================================================
+# CanvHQ service template for Coolify (Add Resource -> Docker Compose).
+# Check Coolify's own documentation for how it fills the SERVICE_* variables.
+# ==============================================================================
+services:
+  canvhq:
+    image: ghcr.io/qaribhaider/canvhq:latest
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://${SERVICE_USER_POSTGRES:-postgres}:${SERVICE_PASSWORD_POSTGRES}@canvhq-db:5432/${POSTGRES_DB:-canvhq}?schema=public
+      
+      # Core Security & URL (Coolify injects FQDN or specify your custom domain)
+      - AUTH_SECRET=${SERVICE_PASSWORD_AUTH:-replace_with_min_32_char_secret}
+      - AUTH_URL=${SERVICE_FQDN_CANVHQ:-http://localhost:3000}
+      - FRONTEND_URL=${SERVICE_FQDN_CANVHQ:-http://localhost:3000}
+      - ENABLE_DEV_LOGIN=${ENABLE_DEV_LOGIN:-false}
+      - TRUST_PROXY=${TRUST_PROXY:-1}
+
+      # Who may sign up, and what the operator shows on the Privacy and Terms pages
+      - ALLOW_SIGNUPS=${ALLOW_SIGNUPS:-true}
+      - FIRST_ACCOUNT_EMAIL=${FIRST_ACCOUNT_EMAIL:-}
+      - OPERATOR_NAME=${OPERATOR_NAME:-}
+      - OPERATOR_CONTACT=${OPERATOR_CONTACT:-}
+
+      # Optional limits per account (empty means no limit)
+      - LIMIT_SIGNUPS_PER_IP=${LIMIT_SIGNUPS_PER_IP:-}
+      - LIMIT_SIGNUPS_WINDOW_SECONDS=${LIMIT_SIGNUPS_WINDOW_SECONDS:-}
+      - LIMIT_WORKSPACES_PER_ACCOUNT=${LIMIT_WORKSPACES_PER_ACCOUNT:-}
+      - LIMIT_BOARDS_PER_ACCOUNT=${LIMIT_BOARDS_PER_ACCOUNT:-}
+      - LIMIT_STORAGE_MB_PER_ACCOUNT=${LIMIT_STORAGE_MB_PER_ACCOUNT:-}
+
+      # Object storage: any S3-compatible service
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - S3_REGION=${S3_REGION:-auto}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE:-true}
+
+      # Sign-in with Google (needed in production)
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+
+      # Optional Umami Analytics
+      - UMAMI_WEBSITE_ID=${UMAMI_WEBSITE_ID:-}
+      - UMAMI_HOST_URL=${UMAMI_HOST_URL:-}
+    depends_on:
+      canvhq-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "coolify.managed=true"
+
+  canvhq-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${SERVICE_USER_POSTGRES:-postgres}
+      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+      - POSTGRES_DB=${POSTGRES_DB:-canvhq}
+    volumes:
+      - canvhq_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SERVICE_USER_POSTGRES:-postgres} -d ${POSTGRES_DB:-canvhq}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    labels:
+      - "coolify.managed=true"
+
+volumes:
+  canvhq_postgres_data:
+    name: canvhq_postgres_data
