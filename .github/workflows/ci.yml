@@ -136,9 +136,14 @@ jobs:
       - run: pnpm -C frontend install --frozen-lockfile
 
       - name: Start the stack
-        # With no .env the stack starts with the dev login on and request limits off, which is
-        # what the specs need (frontend/e2e/README.md).
-        run: docker compose up -d --build db storage backend frontend
+        # The stack refuses to start without a signing secret, so this run gets a throwaway one
+        # (kept for the later steps, which also read the compose file). Apart from that, with no
+        # .env it starts with the dev login on and request limits off, which is what the specs
+        # need (frontend/e2e/README.md).
+        run: |
+          secret="$(openssl rand -hex 32)"
+          echo "AUTH_SECRET=$secret" >> "$GITHUB_ENV"
+          AUTH_SECRET="$secret" docker compose up -d --build db storage backend frontend
 
       - name: Wait for the stack
         run: |
