@@ -55,6 +55,10 @@ updates:
     groups:
       docker:
         patterns: ['*']
+    # A new major version of Node or of a base image is a deliberate upgrade, never an automatic one.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: docker-compose
     directory: /
@@ -68,3 +72,8 @@ updates:
     groups:
       docker-compose:
         patterns: ['*']
+    # PostgreSQL in particular: a new major version cannot open the old data files without a
+    # dump and restore, so it must never arrive as an automatic update.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
