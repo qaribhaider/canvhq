@@ -35,7 +35,11 @@ docker compose up -d db storage && pnpm -C backend run test:integration
 pnpm run test:e2e        # with the dev stack running; see frontend/e2e/README.md
 ```
 
-`pnpm run format` may need two passes on a few files. Continuous integration runs the same checks.
+`pnpm run format` may need two passes on a few files. Continuous integration runs the same checks, except the browser tests, which run on every merge to `main` and on a pull request that carries the `e2e` label (add it if you touched access, keys or the Docker image).
+
+## Pull requests and releases
+
+Pull requests are squash-merged, so the **title becomes the commit message** and a check enforces its form: `feat: ...` for something users will notice (a new version), `fix: ...` for a bug fix (a patch), or `docs:`, `chore:`, `test:`, `ci:`, `refactor:`, `perf:`, `build:` for the rest, which stay out of the release notes. Maintainers release by merging the standing "release" pull request that a bot keeps up to date; that creates the tag, the GitHub release and the Docker image. You never edit the version by hand.
 
 ## Rules that are easy to miss
 

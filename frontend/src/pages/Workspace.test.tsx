@@ -7,6 +7,7 @@ import { AbilityBuilder, createMongoAbility, type MongoAbility } from '@casl/abi
 import { packRules } from '@casl/ability/extra';
 import { Workspace } from './Workspace';
 import { useSession, signOut, authClient } from '@/lib/auth-client';
+import { APP_VERSION } from '@/lib/constants';
 import { errorResponse, jsonResponse } from '@/test/http';
 
 function buildPackedRules(
@@ -200,7 +201,7 @@ describe('Workspace Dashboard Component', () => {
   it('renders header, breadcrumb, and boards cleanly', async () => {
     renderWorkspace();
     expect(screen.getByText('CanvHQ')).toBeInTheDocument();
-    expect(screen.getByText('CANVHQ V0.1')).toBeInTheDocument();
+    expect(screen.getByText(`CANVHQ ${APP_VERSION.toUpperCase()}`)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getAllByText('Acme Eng').length).toBeGreaterThan(0);

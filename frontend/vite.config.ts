@@ -2,7 +2,27 @@ import react from '@vitejs/plugin-react';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
+import { readFileSync } from 'node:fs';
 import path from 'path';
+
+/**
+ * The version shown in the app is this package's own, which the release process keeps equal to the
+ * root one (`scripts/check-versions.mjs` fails the build when they differ).
+ */
+function packageVersion(): string {
+  const pkg: unknown = JSON.parse(
+    readFileSync(path.resolve(import.meta.dirname, 'package.json'), 'utf8'),
+  );
+  if (
+    typeof pkg === 'object' &&
+    pkg !== null &&
+    'version' in pkg &&
+    typeof pkg.version === 'string'
+  ) {
+    return pkg.version;
+  }
+  throw new Error('frontend/package.json has no version');
+}
 
 const EXCALIDRAW_FONT_CDN = /https:\/\/esm\.sh\/\$\{[\s\S]*?\}\/dist\/prod\//;
 
@@ -31,6 +51,7 @@ function selfHostedExcalidrawFonts(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: { BUILD_VERSION: JSON.stringify(packageVersion()) },
   plugins: [
     react(),
     selfHostedExcalidrawFonts(),

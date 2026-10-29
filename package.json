@@ -1,6 +1,6 @@
 {
   "name": "canvhq-root",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
   "description": "CanvHQ - a self-hostable, end-to-end encrypted whiteboard",
@@ -9,6 +9,7 @@
     "node": ">=22"
   },
   "scripts": {
+    "check:versions": "node scripts/check-versions.mjs",
     "test:prod-container": "./scripts/test-prod-container.sh",
     "typecheck": "pnpm -C backend typecheck && pnpm -C frontend typecheck",
     "lint": "pnpm -C backend lint && pnpm -C frontend lint",

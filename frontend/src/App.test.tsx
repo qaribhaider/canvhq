@@ -5,6 +5,10 @@ import App from './App';
 import { useSession, authClient } from './lib/auth-client';
 import { errorResponse, jsonResponse } from './test/http';
 import { queryClient } from './lib/query-client';
+import { APP_VERSION } from './lib/constants';
+
+/** What the signed-in footer says about the release. */
+const FOOTER_VERSION = `CANVHQ ${APP_VERSION.toUpperCase()}`;
 
 function requestUrl(input: RequestInfo | URL): string {
   if (typeof input === 'string') return input;
@@ -362,7 +366,7 @@ describe('App Routing & Route Protection', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('CANVHQ V0.1')).toBeInTheDocument();
+      expect(screen.getByText(FOOTER_VERSION)).toBeInTheDocument();
     });
   });
 
@@ -435,7 +439,7 @@ describe('App Routing & Route Protection', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('CANVHQ V0.1')).toBeInTheDocument();
+      expect(screen.getByText(FOOTER_VERSION)).toBeInTheDocument();
     });
   });
 
@@ -455,7 +459,7 @@ describe('App Routing & Route Protection', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('CANVHQ V0.1')).toBeInTheDocument();
+      expect(screen.getByText(FOOTER_VERSION)).toBeInTheDocument();
     });
   });
 
@@ -475,7 +479,7 @@ describe('App Routing & Route Protection', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('CANVHQ V0.1')).toBeInTheDocument();
+      expect(screen.getByText(FOOTER_VERSION)).toBeInTheDocument();
     });
   });
 
@@ -493,7 +497,7 @@ describe('App Routing & Route Protection', () => {
       await screen.findByText('Only workspace owners and admins can open management.'),
     ).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Workspace Management' })).not.toBeInTheDocument();
-    expect(await screen.findByText('CANVHQ V0.1')).toBeInTheDocument();
+    expect(await screen.findByText(FOOTER_VERSION)).toBeInTheDocument();
   });
 
   it('renders /w/:slug/management for an owner or admin', async () => {
