@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { screen } from '@testing-library/react';
 import { AuthenticatedFooter } from './AuthenticatedFooter';
+import { APP_VERSION } from '@/lib/constants';
 import { jsonResponse } from '@/test/http';
 import { stubFetchRoutes } from '@/test/route-fetch';
 import { renderWithProviders } from '@/test/render-with-providers';
@@ -38,7 +39,7 @@ describe('AuthenticatedFooter Component', () => {
 
     expect(await screen.findByText('1 Workspaces')).toBeInTheDocument();
     expect(screen.getByText('2 Projects')).toBeInTheDocument();
-    expect(screen.getByText('CANVHQ V0.1')).toBeInTheDocument();
+    expect(screen.getByText(`CANVHQ ${APP_VERSION.toUpperCase()}`)).toBeInTheDocument();
     expect(container.querySelector('footer')).toHaveClass('custom-test-class');
   });
 

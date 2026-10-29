@@ -4,6 +4,7 @@ import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import { Login } from './Login';
 import { authClient } from '@/lib/auth-client';
 import { clearAuthConfigCache } from '@/lib/auth-config';
+import { APP_VERSION } from '@/lib/constants';
 import { jsonResponse } from '@/test/http';
 
 vi.mock('@/lib/auth-client', () => ({
@@ -73,7 +74,7 @@ describe('Login Component', () => {
 
     // Dev login button
     expect(screen.getByRole('button', { name: /Login with Test Account/i })).toBeInTheDocument();
-    expect(screen.getByText('CanvHQ v0.1')).toBeInTheDocument();
+    expect(screen.getByText(`CanvHQ ${APP_VERSION}`)).toBeInTheDocument();
   });
 
   it('calls authClient.signIn.social when clicking Google button', async () => {
