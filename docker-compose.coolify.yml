@@ -59,7 +59,7 @@ services:
       - "coolify.managed=true"
 
   canvhq-db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${SERVICE_USER_POSTGRES:-postgres}
