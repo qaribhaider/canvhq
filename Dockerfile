@@ -5,7 +5,7 @@
 # ==========================================
 
 # STAGE 1: Build Frontend Assets
-FROM node:24-alpine AS frontend-builder
+FROM node:25-alpine AS frontend-builder
 WORKDIR /app/frontend
 
 COPY frontend/package.json ./
@@ -18,7 +18,7 @@ COPY frontend/ ./
 RUN pnpm run build
 
 # STAGE 2: Build Backend Application
-FROM node:24-alpine AS backend-builder
+FROM node:25-alpine AS backend-builder
 WORKDIR /app/backend
 
 COPY backend/package.json ./
@@ -35,7 +35,7 @@ COPY backend/ ./
 RUN pnpm run build
 
 # STAGE 3: Production Runner
-FROM node:24-alpine AS runner
+FROM node:25-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
