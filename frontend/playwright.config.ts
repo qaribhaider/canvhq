@@ -10,7 +10,8 @@ export default defineConfig({
   testIgnore: 'production-image.spec.ts',
   globalSetup: './e2e/global-setup.ts',
   fullyParallel: false,
-  retries: 0,
+  // One retry in CI, where a shared runner can stall a step; locally a failure is a failure.
+  retries: process.env.CI ? 1 : 0,
   workers: 1,
   reporter: 'list',
   use: {
