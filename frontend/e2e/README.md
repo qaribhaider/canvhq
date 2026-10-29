@@ -89,6 +89,11 @@ Docker's memory and Docker then kills the database.
   back" as the browser fetching the image file and the scene holding the expected shapes (pixels
   are not inspected). A test in `src/lib/design-tokens.test.ts` fails if application code assigns
   anything to `window` or `globalThis`.
+- CI runs the suite as three jobs side by side, each with its own stack. The slowest journeys carry
+  a tag (`@journeys-1`, `@journeys-2`) so they get a job each; every other test, including a spec
+  you add later, runs in the third (`--grep-invert`). Locally you can run one group the same way:
+  `pnpm -C frontend exec playwright test --grep @journeys-1`. When you add a long journey, tag it
+  so no job becomes the slow one again (a job's time is its slowest tests added up).
 - The `rbac-*.spec.ts` files are access-control journeys built on `rbac-cast.ts`. A scenario sets a
   small cast up through the real screens (so every key is wrapped in a browser), changes who may
   do what (join, grant, role changes, removal, hand-over, account erasure, a new device), and after

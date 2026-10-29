@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { Cast, type Canvas } from './rbac-cast';
 
-test.describe('A member erases their account', () => {
+test.describe('A member erases their account', { tag: '@journeys-1' }, () => {
   test.use({ actionTimeout: 30_000 });
 
   test('what they made stays openable for everyone else, and the project keeps working', async ({

@@ -8,7 +8,8 @@ import { Cast, type Access, type Canvas } from './rbac-cast';
  * "everything" and "only what you were given" are different answers. After every step every canvas
  * ever made is checked for every person.
  */
-test.describe('Workspace roles over time', () => {
+// Tagged so CI can run the slow access journeys in separate jobs (see e2e/README.md).
+test.describe('Workspace roles over time', { tag: '@journeys-1' }, () => {
   test.use({ actionTimeout: 30_000 });
 
   test('Admin promotion, demotion, ownership transfer and removal leave every canvas with the right people', async ({

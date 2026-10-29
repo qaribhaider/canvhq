@@ -6,7 +6,7 @@ import { Cast, type Access, type Canvas } from './rbac-cast';
  * the key), come back, change roles, and use a device that has never seen their account. After
  * every step every canvas ever made is checked for every person.
  */
-test.describe('Project access over time', () => {
+test.describe('Project access over time', { tag: '@journeys-2' }, () => {
   // A click that cannot find its target should fail with its name, not hang until the test ends.
   test.use({ actionTimeout: 30_000 });
 
