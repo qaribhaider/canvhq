@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { Cast, type Access, type Canvas } from './rbac-cast';
 
-test.describe('Joining a project, and the public link', () => {
+test.describe('Joining a project, and the public link', { tag: '@journeys-2' }, () => {
   test.use({ actionTimeout: 30_000 });
 
   test('a Project Admin completes a pending invitation and assigns a workspace Viewer; each gets exactly what they were given', async ({

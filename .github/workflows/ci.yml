@@ -116,10 +116,26 @@ jobs:
       - run: pnpm -C backend run test:integration
 
   e2e:
-    name: Browser tests
+    # Three jobs side by side, each with its own stack. The slow access journeys are tagged in the
+    # specs (@journeys-1, @journeys-2) so they get a job each, and everything else, including any
+    # spec added later, runs in the third. Together they take about a third of the time of one job.
+    name: Browser tests (${{ matrix.name }})
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: access journeys 1
+            flag: --grep
+            pattern: '@journeys-1'
+          - name: access journeys 2
+            flag: --grep
+            pattern: '@journeys-2'
+          - name: everything else
+            flag: --grep-invert
+            pattern: '@journeys-1|@journeys-2'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -157,7 +173,11 @@ jobs:
 
       - run: pnpm -C frontend exec playwright install --with-deps chromium
 
-      - run: pnpm run test:e2e
+      - name: Run this job's tests
+        env:
+          E2E_FLAG: ${{ matrix.flag }}
+          E2E_PATTERN: ${{ matrix.pattern }}
+        run: pnpm -C frontend exec playwright test "$E2E_FLAG" "$E2E_PATTERN"
 
       - name: Logs on failure
         if: failure()
@@ -167,7 +187,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: playwright-failures
+          name: playwright-failures-${{ strategy.job-index }}
           path: frontend/test-results
           retention-days: 7
           if-no-files-found: ignore

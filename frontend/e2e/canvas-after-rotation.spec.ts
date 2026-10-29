@@ -78,7 +78,7 @@ async function grantFirstPending(page: Page): Promise<void> {
  * has an Owner and a Project Admin (only an Editor in the workspace) create and open canvases in
  * between.
  */
-test.describe('Canvases made after a key rotation', () => {
+test.describe('Canvases made after a key rotation', { tag: '@journeys-1' }, () => {
   test('stay openable for the Owner and for a Project Admin, across two rotations', async ({
     browser,
     request,
