@@ -4,7 +4,7 @@
   "private": true,
   "license": "Apache-2.0",
   "description": "CanvHQ - a self-hostable, end-to-end encrypted whiteboard",
-  "packageManager": "pnpm@12.6.0",
+  "packageManager": "pnpm@12.17.0",
   "engines": {
     "node": ">=22"
   },

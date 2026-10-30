@@ -53,6 +53,10 @@ RUN corepack install && \
     pnpm --version && \
     chmod -R 755 /usr/local/share/corepack
 
+# The base image ships npm with its own copies of packages, which the vulnerability scan reports
+# and the image never uses: it installs and runs through pnpm. Dropping npm removes them.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+
 # Setup directories with non-root ownership before copying project files
 RUN mkdir -p /app/backups && chown -R node:node /app
 
