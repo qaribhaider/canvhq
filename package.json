@@ -1,6 +1,6 @@
 {
   "name": "canvhq-root",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "license": "Apache-2.0",
   "description": "CanvHQ - a self-hostable, end-to-end encrypted whiteboard",
