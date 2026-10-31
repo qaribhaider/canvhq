@@ -19,7 +19,7 @@ CanvHQ runs the same way on a rented server, a machine at home or a platform tha
 
 ## Platforms that run Compose files
 
-The repository has a compose file for platforms that fill in some variables for you: `docker-compose.coolify.yml`. It is written for Coolify, uses the `SERVICE_*` variables that platform provides, and already sets `TRUST_PROXY=1` because the platform's proxy sits in front. Check that platform's own documentation for how it uses such files. Other platforms can use `docker-compose.prod.yml`.
+The repository has a compose file for platforms that fill in some variables for you: `docker-compose.coolify.yml`. It is written for Coolify, and [Deploying on Coolify](/docs/deploying-on-coolify) walks through it. Other platforms can use `docker-compose.prod.yml`.
 
 ## After it is running
 

@@ -3,6 +3,7 @@ import type { DocCategory, DocArticle } from './types';
 import runWithDockerComposeMd from './articles/run-with-docker-compose.md?raw';
 import signInProvidersMd from './articles/sign-in-providers.md?raw';
 import deployingOnAServerMd from './articles/deploying-on-a-server.md?raw';
+import deployingOnCoolifyMd from './articles/deploying-on-coolify.md?raw';
 import goingPublicMd from './articles/going-public.md?raw';
 import storageMd from './articles/storage.md?raw';
 import backupsAndRestoreMd from './articles/backups-and-restore.md?raw';
@@ -35,6 +36,14 @@ export const DOC_ARTICLES = {
     category: 'Running it',
     readingTime: '2 min read',
     content: deployingOnAServerMd,
+  },
+  'deploying-on-coolify': {
+    slug: 'deploying-on-coolify',
+    title: 'Deploying on Coolify',
+    description: 'A compose file for Coolify, and the settings to fill in.',
+    category: 'Running it',
+    readingTime: '3 min read',
+    content: deployingOnCoolifyMd,
   },
   'going-public': {
     slug: 'going-public',
@@ -115,6 +124,7 @@ export const DOC_CATEGORIES: DocCategory[] = [
     title: 'Running it',
     articles: [
       DOC_ARTICLES['deploying-on-a-server'],
+      DOC_ARTICLES['deploying-on-coolify'],
       DOC_ARTICLES['going-public'],
       DOC_ARTICLES.storage,
       DOC_ARTICLES['backups-and-restore'],
