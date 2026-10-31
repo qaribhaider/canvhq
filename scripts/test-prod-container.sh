@@ -17,7 +17,11 @@ if command -v docker >/dev/null 2>&1; then
     exit 1
   fi
 
-  if docker compose -f docker-compose.coolify.yml config >/dev/null 2>&1; then
+  # The Coolify file marks settings the operator must fill in as required, so give them placeholder
+  # values here; the check is about the file's structure, not about any real deployment.
+  if GOOGLE_CLIENT_ID=x GOOGLE_CLIENT_SECRET=x S3_ENDPOINT=https://s3.example.org \
+    S3_ACCESS_KEY_ID=x S3_SECRET_ACCESS_KEY=x \
+    docker compose -f docker-compose.coolify.yml config >/dev/null 2>&1; then
     echo "  ✅ docker-compose.coolify.yml is structurally valid."
   else
     echo "  ❌ docker-compose.coolify.yml is not valid." >&2
