@@ -51,6 +51,12 @@ describe('docs accuracy', () => {
     expect(DOC_ARTICLES['run-with-docker-compose'].content).toContain(compose);
   });
 
+  it('shows docker-compose.coolify.yml exactly as it is in the repository', () => {
+    const compose = readRepositoryFile('docker-compose.coolify.yml').trimEnd();
+
+    expect(DOC_ARTICLES['deploying-on-coolify'].content).toContain(compose);
+  });
+
   it('only links to articles that exist', () => {
     const slugs = new Set(Object.keys(DOC_ARTICLES));
     const broken: string[] = [];

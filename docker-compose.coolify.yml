@@ -1,24 +1,45 @@
-# ==============================================================================
-# CanvHQ service template for Coolify (Add Resource -> Docker Compose).
-# Check Coolify's own documentation for how it fills the SERVICE_* variables.
-# ==============================================================================
+# CanvHQ for Coolify (Add Resource -> Docker Compose Empty), paste this file in.
+#
+# Coolify reads three things from this file:
+#   - SERVICE_URL_CANVHQ_3000   gives the app a domain and points its proxy at port 3000.
+#                               The address (with https://) is then available as ${SERVICE_URL_CANVHQ}.
+#   - SERVICE_PASSWORD_*        a generated secret, kept stable between deploys.
+#   - ${NAME:-default}          shows NAME in the Environment Variables tab with that default.
+#     ${NAME:?}                 shows NAME as required: the deploy stops until you fill it in.
+#
+# Ports, container names and networks are left out on purpose: Coolify manages them.
 services:
   canvhq:
-    image: ghcr.io/qaribhaider/canvhq:latest
+    image: ghcr.io/qaribhaider/canvhq:${CANVHQ_IMAGE_TAG:-latest}
     restart: unless-stopped
     environment:
+      - SERVICE_URL_CANVHQ_3000
       - NODE_ENV=production
       - PORT=3000
-      - DATABASE_URL=postgresql://${SERVICE_USER_POSTGRES:-postgres}:${SERVICE_PASSWORD_POSTGRES}@canvhq-db:5432/${POSTGRES_DB:-canvhq}?schema=public
-      
-      # Core Security & URL (Coolify injects FQDN or specify your custom domain)
-      - AUTH_SECRET=${SERVICE_PASSWORD_AUTH:-replace_with_min_32_char_secret}
-      - AUTH_URL=${SERVICE_FQDN_CANVHQ:-http://localhost:3000}
-      - FRONTEND_URL=${SERVICE_FQDN_CANVHQ:-http://localhost:3000}
-      - ENABLE_DEV_LOGIN=${ENABLE_DEV_LOGIN:-false}
-      - TRUST_PROXY=${TRUST_PROXY:-1}
+      - DATABASE_URL=postgresql://${SERVICE_USER_POSTGRES}:${SERVICE_PASSWORD_POSTGRES}@db:5432/${POSTGRES_DB:-canvhq}?schema=public
 
-      # Who may sign up, and what the operator shows on the Privacy and Terms pages
+      # Signing secret (64 generated characters; the app needs at least 32)
+      - AUTH_SECRET=${SERVICE_PASSWORD_64_AUTH}
+      # Both must be a full address with https://. Set your domain on the canvhq service in Coolify.
+      - AUTH_URL=${SERVICE_URL_CANVHQ}
+      - FRONTEND_URL=${SERVICE_URL_CANVHQ}
+      # Coolify's proxy is one hop in front of the app
+      - TRUST_PROXY=${TRUST_PROXY:-1}
+      - ENABLE_DEV_LOGIN=false
+
+      # Sign in with Google
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:?}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:?}
+
+      # Object storage: any S3-compatible service
+      - S3_ENDPOINT=${S3_ENDPOINT:?}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME:-canvhq-boards}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID:?}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY:?}
+      - S3_REGION=${S3_REGION:-us-east-1}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE:-true}
+
+      # Who may sign up, and what the Privacy and Terms pages show
       - ALLOW_SIGNUPS=${ALLOW_SIGNUPS:-true}
       - FIRST_ACCOUNT_EMAIL=${FIRST_ACCOUNT_EMAIL:-}
       - OPERATOR_NAME=${OPERATOR_NAME:-}
@@ -31,51 +52,34 @@ services:
       - LIMIT_BOARDS_PER_ACCOUNT=${LIMIT_BOARDS_PER_ACCOUNT:-}
       - LIMIT_STORAGE_MB_PER_ACCOUNT=${LIMIT_STORAGE_MB_PER_ACCOUNT:-}
 
-      # Object storage: any S3-compatible service
-      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
-      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
-      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
-      - S3_ENDPOINT=${S3_ENDPOINT}
-      - S3_REGION=${S3_REGION:-auto}
-      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE:-true}
-
-      # Sign-in with Google (needed in production)
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-
-      # Optional Umami Analytics
+      # Optional Umami analytics
       - UMAMI_WEBSITE_ID=${UMAMI_WEBSITE_ID:-}
       - UMAMI_HOST_URL=${UMAMI_HOST_URL:-}
     depends_on:
-      canvhq-db:
+      db:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 3
-      start_period: 15s
-    labels:
-      - "coolify.managed=true"
+      start_period: 30s
 
-  canvhq-db:
+  db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${SERVICE_USER_POSTGRES:-postgres}
+      - POSTGRES_USER=${SERVICE_USER_POSTGRES}
       - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
       - POSTGRES_DB=${POSTGRES_DB:-canvhq}
     volumes:
-      - canvhq_postgres_data:/var/lib/postgresql/data
+      - canvhq-pg-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${SERVICE_USER_POSTGRES:-postgres} -d ${POSTGRES_DB:-canvhq}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
       start_period: 5s
-    labels:
-      - "coolify.managed=true"
 
 volumes:
-  canvhq_postgres_data:
-    name: canvhq_postgres_data
+  canvhq-pg-data:
