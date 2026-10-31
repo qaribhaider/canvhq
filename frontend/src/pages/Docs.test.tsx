@@ -111,7 +111,7 @@ describe('Modern Public Documentation Hub (/docs/*)', () => {
     renderDocs('/docs/going-public');
 
     const prevLink = screen.getByText('Previous').closest('a');
-    expect(prevLink).toHaveAttribute('href', '/docs/deploying-on-a-server');
+    expect(prevLink).toHaveAttribute('href', '/docs/deploying-on-coolify');
 
     const nextLink = screen.getByText('Next').closest('a');
     expect(nextLink).toHaveAttribute('href', '/docs/storage');
