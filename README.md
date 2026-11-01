@@ -1,16 +1,18 @@
 # CanvHQ
 
+![CanvHQ: your whiteboards, encrypted in your browser](.github/banner.png)
+
 A self-hostable whiteboard where canvases are encrypted in your browser before they are saved. It is built on Excalidraw, with workspaces, projects, members and roles around it. Free and open source.
 
-## Try it
+**[Try the demo](https://canvhq-demo.quore.dev)**: one click, no sign-up. Accounts are throwaway, so do not keep real work there.
+
+## Run it on your machine
+
+You need Docker.
 
 ```bash
 cp .env.example .env
-```
-
-In `.env`, set `AUTH_SECRET` (for example with `openssl rand -hex 32`) and `ENABLE_DEV_LOGIN=true`, then:
-
-```bash
+# in .env set AUTH_SECRET (for example `openssl rand -hex 32`) and ENABLE_DEV_LOGIN=true
 docker compose up
 ```
 
@@ -20,18 +22,23 @@ That stack is for development: it has hot reload, a local S3-compatible store an
 
 ## Run it for real
 
-Use `docker-compose.prod.yml`, S3-compatible storage and a Google sign-in client (other providers may come later). The documentation in the app, under `/docs`, covers it from there: Docker Compose, signing in with Google, a server behind a proxy, storage, backups and restore, upgrading, and every setting.
+Use `docker-compose.prod.yml` (or `docker-compose.coolify.yml` on Coolify), S3-compatible storage and a Google sign-in client. The documentation in the app, under `/docs`, covers it from there: Docker Compose, Coolify, signing in with Google, a server behind a proxy, storage, backups and restore, upgrading, and every setting.
 
-## Good to know
+## What is and is not encrypted
 
-- Canvas content and images are encrypted in the browser, and the server does not hold a key that opens them. Names of workspaces, projects and canvases, member names and emails, and who belongs to what are stored as readable data.
+- Encrypted in the browser, with no key on the server that opens them: canvas content and images.
+- Stored as readable data: names of workspaces, projects and canvases, member names and emails, and who belongs to what.
 - There is no passphrase reset. If someone loses their passphrase, their canvases cannot be opened.
 - The encrypting happens in your browser, using code the server sends to it. If that server were compromised or run by someone malicious, it could send your browser altered code. Your own computer or browser being compromised is a limit too. Details and the other limits are on the Security page and in [SECURITY.md](SECURITY.md).
-- Sign-in is through an OAuth provider only. There are no passwords and no email sending: invitations are links you copy.
+
+## Limits today
+
+- One person edits a canvas at a time: there is no live multi-user editing yet.
+- Sign-in is through Google only. There are no passwords and no email sending: invitations are links you copy.
 
 ## Working on it
 
-`backend/` (NestJS, Prisma, PostgreSQL) and `frontend/` (React, Vite) are separate packages with their own `package.json` and lockfile. See [CONTRIBUTING.md](CONTRIBUTING.md).
+`backend/` (NestJS, Prisma, PostgreSQL) and `frontend/` (React, Vite) are separate packages with their own `package.json` and lockfile. See [CONTRIBUTING.md](CONTRIBUTING.md). Issues labelled [good first issue](https://github.com/qaribhaider/canvhq/labels/good%20first%20issue) are a good place to start.
 
 ## Licence
 
