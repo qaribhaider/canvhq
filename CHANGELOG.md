@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/qaribhaider/canvhq/compare/v0.2.0...v0.2.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* clear the code scanning alerts ([#29](https://github.com/qaribhaider/canvhq/issues/29)) ([d69fec1](https://github.com/qaribhaider/canvhq/commit/d69fec16de11bccb0c09c098795befe17575608d))
+
 ## [0.2.0](https://github.com/qaribhaider/canvhq/compare/v0.1.1...v0.2.0) (2026-10-31)
 
 
