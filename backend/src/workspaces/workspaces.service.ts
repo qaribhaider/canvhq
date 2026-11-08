@@ -922,9 +922,10 @@ export class WorkspacesService {
     const latin = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
+      // The line above leaves no two dashes in a row, so at most one dash can sit at either end.
+      .replace(/^-|-$/g, '')
       .slice(0, 60)
-      .replace(/-+$/g, '');
+      .replace(/-$/g, '');
 
     // A name with no usable Latin characters still needs a unique, readable slug.
     return latin.length > 0 ? latin : `workspace-${randomBytes(3).toString('hex')}`;
