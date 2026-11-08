@@ -35,6 +35,27 @@ function hasStatusCode(err: unknown, status: number): boolean {
   );
 }
 
+// Services that put the bucket in the host name (bucket.s3.region.amazonaws.com), not in the path.
+const BUCKET_IN_HOST_SUFFIXES = ['.amazonaws.com', '.r2.cloudflarestorage.com'];
+
+/**
+ * What `S3_FORCE_PATH_STYLE` means when it is not set: self-hosted stores (RustFS, MinIO,
+ * SeaweedFS) want the bucket in the path, AWS S3 and R2 want it in the host name, and the SDK's own
+ * default endpoint (none configured) is AWS. Only the endpoint's host name is looked at.
+ */
+export function defaultForcePathStyle(endpoint: string | undefined): boolean {
+  if (!endpoint) {
+    return false;
+  }
+  try {
+    const { hostname } = new URL(endpoint);
+    return !BUCKET_IN_HOST_SUFFIXES.some((suffix) => hostname.endsWith(suffix));
+  } catch {
+    // Not a URL: the SDK refuses it later with its own message, so the style does not matter.
+    return true;
+  }
+}
+
 @Injectable()
 export class StorageService implements OnModuleInit {
   private readonly logger = new Logger(StorageService.name);
@@ -64,18 +85,9 @@ export class StorageService implements OnModuleInit {
     const secretAccessKey = configService.get('S3_SECRET_ACCESS_KEY', { infer: true });
     this.bucket = configService.get('S3_BUCKET_NAME', { infer: true });
 
-    // Auto-detect or respect S3_FORCE_PATH_STYLE
-    const configuredForcePathStyle = configService.get('S3_FORCE_PATH_STYLE', { infer: true });
-    let forcePathStyle = true;
-    if (configuredForcePathStyle !== undefined) {
-      forcePathStyle = configuredForcePathStyle;
-    } else if (endpoint) {
-      if (endpoint.includes('amazonaws.com') || endpoint.includes('r2.cloudflarestorage.com')) {
-        forcePathStyle = false;
-      }
-    } else {
-      forcePathStyle = false;
-    }
+    // Respect S3_FORCE_PATH_STYLE, or work it out from the endpoint
+    const forcePathStyle =
+      configService.get('S3_FORCE_PATH_STYLE', { infer: true }) ?? defaultForcePathStyle(endpoint);
 
     this.s3 = new S3Client({
       ...(endpoint ? { endpoint } : {}),

@@ -9,7 +9,7 @@ import {
   DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
 import type { EnvConfig } from '../config/env.schema.js';
-import { StorageService } from './storage.service.js';
+import { StorageService, defaultForcePathStyle } from './storage.service.js';
 
 function firstCallArg(spy: { mock: { calls: unknown[][] } }, index: number): unknown {
   const call = spy.mock.calls[index];
@@ -33,6 +33,25 @@ function deleteObjectsList(cmd: unknown): unknown {
   }
   return undefined;
 }
+
+describe('defaultForcePathStyle', () => {
+  it.each([
+    ['https://s3.eu-west-1.amazonaws.com', false],
+    ['https://abc123.r2.cloudflarestorage.com', false],
+    ['http://localhost:9000', true],
+    ['https://s3.example.org', true],
+    // The service name in the path or the query is not the host, so it does not count.
+    ['https://s3.example.org/amazonaws.com', true],
+    ['https://amazonaws.com.example.org', true],
+    ['not a url', true],
+  ])('%s -> path style %s', (endpoint, expected) => {
+    expect(defaultForcePathStyle(endpoint)).toBe(expected);
+  });
+
+  it('assumes the SDK default (AWS) when no endpoint is set', () => {
+    expect(defaultForcePathStyle(undefined)).toBe(false);
+  });
+});
 
 describe('StorageService', () => {
   let configServiceMock: ConfigService<EnvConfig, true>;

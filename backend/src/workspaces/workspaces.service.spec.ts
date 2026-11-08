@@ -250,6 +250,24 @@ describe('WorkspacesService', () => {
       });
       expect(nonLatin.slug).toMatch(/^workspace-[0-9a-f]{6}$/);
     });
+
+    it('trims dashes at both ends of the slug, however long the name is', async () => {
+      prismaMock.member.findMany.mockResolvedValue([]);
+      prismaMock.organization.findMany.mockResolvedValue([]);
+      prismaMock.organization.create.mockImplementation(
+        ({ data: created }: { data: { slug: string; name: string } }) =>
+          Promise.resolve({ id: 'org-new', slug: created.slug, name: created.name }),
+      );
+      prismaMock.member.create.mockResolvedValue({});
+      prismaMock.project.create.mockResolvedValue({ id: 'p-new' });
+
+      const dashed = await service.createWorkspace(accessWith('owner'), {
+        ...data,
+        name: `--${'a-'.repeat(40)}--`,
+      });
+      // The 60-character cut would end on a dash, so that dash is dropped too.
+      expect(dashed.slug).toBe('a-'.repeat(29) + 'a');
+    });
   });
 
   describe('updateWorkspace', () => {

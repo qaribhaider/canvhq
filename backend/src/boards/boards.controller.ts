@@ -26,6 +26,25 @@ const MAX_PAYLOAD_BYTES = 15 * 1024 * 1024; // 15MB
 const MAX_FILE_BYTES = 8 * 1024 * 1024; // 8MB
 const FILE_ID_REGEX = /^[a-zA-Z0-9_-]{1,64}$/;
 
+/**
+ * Reads an uploaded body into one buffer, refusing it as soon as it passes `maxBytes`. The upload
+ * is binary, so no body parser consumes the stream: it is read here, and what comes out is always
+ * a real Buffer, never a value taken from `req.body`.
+ */
+async function readBody(req: Request, maxBytes: number, tooLargeMessage: string): Promise<Buffer> {
+  let totalBytes = 0;
+  const chunks: Buffer[] = [];
+  for await (const chunk of req) {
+    const piece = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    totalBytes += piece.length;
+    if (totalBytes > maxBytes) {
+      throw new PayloadTooLargeException(tooLargeMessage);
+    }
+    chunks.push(piece);
+  }
+  return Buffer.concat(chunks, totalBytes);
+}
+
 @Controller('api/boards')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
@@ -100,39 +119,17 @@ export class BoardsController {
   @Throttle({ default: { limit: 300, ttl: 60000 } })
   async savePayload(
     @CurrentAccess() access: AccessContext,
-    @Req() req: Request & { rawBody?: Buffer },
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Headers('x-board-revision') revisionHeader?: string,
     @Headers('x-board-file-ids') fileIdsHeader?: string,
     @Headers('x-encrypted-board-key') encryptedBoardKey?: string,
   ) {
-    let buffer: Buffer;
-
-    if (req.rawBody && Buffer.isBuffer(req.rawBody)) {
-      if (req.rawBody.length > MAX_PAYLOAD_BYTES) {
-        throw new PayloadTooLargeException('Diagram payload exceeds maximum allowable size (15MB)');
-      }
-      buffer = req.rawBody;
-    } else if (Buffer.isBuffer(req.body)) {
-      if (req.body.length > MAX_PAYLOAD_BYTES) {
-        throw new PayloadTooLargeException('Diagram payload exceeds maximum allowable size (15MB)');
-      }
-      buffer = req.body;
-    } else {
-      let totalBytes = 0;
-      const chunks: Buffer[] = [];
-      for await (const chunk of req) {
-        const b = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-        totalBytes += b.length;
-        if (totalBytes > MAX_PAYLOAD_BYTES) {
-          throw new PayloadTooLargeException(
-            'Diagram payload exceeds maximum allowable size (15MB)',
-          );
-        }
-        chunks.push(b);
-      }
-      buffer = Buffer.concat(chunks, totalBytes);
-    }
+    const buffer = await readBody(
+      req,
+      MAX_PAYLOAD_BYTES,
+      'Diagram payload exceeds maximum allowable size (15MB)',
+    );
 
     if (
       revisionHeader === undefined ||
@@ -193,37 +190,13 @@ export class BoardsController {
   async saveFile(
     @CurrentAccess() access: AccessContext,
     @Param('fileId') fileId: string,
-    @Req() req: Request & { rawBody?: Buffer },
+    @Req() req: Request,
   ) {
     if (!fileId || !FILE_ID_REGEX.test(fileId)) {
       throw new BadRequestException('Invalid file ID format');
     }
 
-    let buffer: Buffer;
-
-    if (req.rawBody && Buffer.isBuffer(req.rawBody)) {
-      if (req.rawBody.length > MAX_FILE_BYTES) {
-        throw new PayloadTooLargeException('File exceeds 8MB limit');
-      }
-      buffer = req.rawBody;
-    } else if (Buffer.isBuffer(req.body)) {
-      if (req.body.length > MAX_FILE_BYTES) {
-        throw new PayloadTooLargeException('File exceeds 8MB limit');
-      }
-      buffer = req.body;
-    } else {
-      let totalBytes = 0;
-      const chunks: Buffer[] = [];
-      for await (const chunk of req) {
-        const b = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-        totalBytes += b.length;
-        if (totalBytes > MAX_FILE_BYTES) {
-          throw new PayloadTooLargeException('File exceeds 8MB limit');
-        }
-        chunks.push(b);
-      }
-      buffer = Buffer.concat(chunks, totalBytes);
-    }
+    const buffer = await readBody(req, MAX_FILE_BYTES, 'File exceeds 8MB limit');
 
     // Validate v1 file header: length >= 33 bytes (1 format + 4 keyVersion + 12 IV + 16 tag), byte 0 === 0x01
     if (buffer.length < 33 || buffer[0] !== 0x01) {

@@ -14,37 +14,31 @@ export interface CspConfigInput {
 }
 
 export function buildCspDirectives(config: CspConfigInput): Record<string, string[]> {
-  const scriptSrc = ["'self'"];
-  const connectSrc = ["'self'"];
+  // Sets, so an origin that appears twice (the analytics host can equal the app's own) is listed once.
+  const scriptSrc = new Set(["'self'"]);
+  const connectSrc = new Set(["'self'"]);
 
   if (config.UMAMI_WEBSITE_ID) {
     const umamiOrigin = config.UMAMI_HOST_URL
       ? new URL(config.UMAMI_HOST_URL).origin
       : 'https://cloud.umami.is';
-    if (!scriptSrc.includes(umamiOrigin)) {
-      scriptSrc.push(umamiOrigin);
-    }
-    if (!connectSrc.includes(umamiOrigin)) {
-      connectSrc.push(umamiOrigin);
-    }
+    scriptSrc.add(umamiOrigin);
+    connectSrc.add(umamiOrigin);
   }
 
   if (config.AUTH_URL) {
     // AUTH_URL is validated as a URL at boot.
-    const authOrigin = new URL(config.AUTH_URL).origin;
-    if (!connectSrc.includes(authOrigin)) {
-      connectSrc.push(authOrigin);
-    }
+    connectSrc.add(new URL(config.AUTH_URL).origin);
   }
 
   return {
     defaultSrc: ["'self'"],
-    scriptSrc,
+    scriptSrc: [...scriptSrc],
     // Excalidraw runtime styling and inline theme style injection require 'unsafe-inline'
     styleSrc: ["'self'", "'unsafe-inline'"],
     fontSrc: ["'self'"],
     imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
-    connectSrc,
+    connectSrc: [...connectSrc],
     workerSrc: ["'self'", 'blob:'],
     objectSrc: ["'none'"],
     baseUri: ["'self'"],
