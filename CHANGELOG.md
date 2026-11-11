@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/qaribhaider/canvhq/compare/v0.2.1...v0.2.2) (2026-11-11)
+
+
+### Bug Fixes
+
+* patch vulnerable dev dependencies, add proxy docs, fix link preview image ([#36](https://github.com/qaribhaider/canvhq/issues/36)) ([521659e](https://github.com/qaribhaider/canvhq/commit/521659eb1d01a22e488551a837b732c49505b9ed))
+
 ## [0.2.1](https://github.com/qaribhaider/canvhq/compare/v0.2.0...v0.2.1) (2026-11-08)
 
 
