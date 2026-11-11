@@ -32,6 +32,7 @@ function runSetup(trustProxy: false | number | string, nodeEnv: 'production' | '
       if (key === 'TRUST_PROXY') return trustProxy;
       if (key === 'NODE_ENV') return nodeEnv;
       if (key === 'trustedOrigins') return ['http://localhost:3000'];
+      if (key === 'FRONTEND_URL') return 'http://localhost:3000';
       return undefined;
     }),
   };

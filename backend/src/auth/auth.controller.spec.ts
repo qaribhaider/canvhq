@@ -1,13 +1,26 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http';
+import type { INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Test } from '@nestjs/testing';
+import request from 'supertest';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { AuthController } from './auth.controller.js';
-import { CLIENT_IP_HEADER } from './auth.js';
+import { AUTH, CLIENT_IP_HEADER } from './auth.js';
+
+// What Better Auth's node handler was given, so the test can see the request it would have served.
+const handled = vi.hoisted(() => ({ headers: {} as IncomingHttpHeaders }));
 
 vi.mock('better-auth/node', () => ({
-  toNodeHandler: vi.fn(() => vi.fn((_req: any, res: any) => res.status(200).send('handled'))),
+  toNodeHandler: () => (req: IncomingMessage, res: ServerResponse) => {
+    handled.headers = req.headers;
+    res.statusCode = 200;
+    res.end('handled');
+  },
 }));
 
 describe('AuthController', () => {
-  const mockPrisma: any = {
+  const prisma = {
     user: {
       findUnique: vi.fn(),
       create: vi.fn(),
@@ -22,113 +35,110 @@ describe('AuthController', () => {
     },
   };
 
-  const mockAuth: any = {};
-  let mockEnvConfig: Record<string, any>;
-  let mockConfigService: any;
+  let env: Record<string, unknown>;
+  let app: INestApplication;
 
-  beforeEach(() => {
-    mockEnvConfig = {
+  beforeEach(async () => {
+    env = {
       NODE_ENV: 'development',
       ENABLE_DEV_LOGIN: true,
       AUTH_SECRET: 'super-secret-key-that-is-at-least-32-chars-long',
       ALLOW_SIGNUPS: true,
       oauthProviders: [],
     };
-    mockConfigService = {
-      get: vi.fn((key: string) => mockEnvConfig[key]),
-    };
+    const moduleRef = await Test.createTestingModule({
+      controllers: [AuthController],
+      providers: [
+        { provide: PrismaService, useValue: prisma },
+        { provide: AUTH, useValue: {} },
+        { provide: ConfigService, useValue: { get: (key: string) => env[key] } },
+      ],
+    }).compile();
+    app = moduleRef.createNestApplication();
+    await app.init();
   });
 
-  it('should delegate request handling to toNodeHandler(auth)', async () => {
-    const controller = new AuthController(mockPrisma, mockAuth, mockConfigService);
-    const req: any = {
-      url: '/api/auth/sign-in',
-      ip: '198.51.100.7',
-      headers: { [CLIENT_IP_HEADER]: '203.0.113.99' },
-    };
-    const res: any = {
-      status: vi.fn().mockReturnThis(),
-      send: vi.fn().mockReturnThis(),
-    };
+  afterEach(async () => {
+    await app.close();
+  });
 
-    await controller.handler(req, res);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.send).toHaveBeenCalledWith('handled');
+  it('should delegate request handling to Better Auth', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/auth/sign-in')
+      .set(CLIENT_IP_HEADER, '203.0.113.99');
+
+    expect(response.status).toBe(200);
+    expect(response.text).toBe('handled');
     // A client-sent value is replaced by the address Express resolved from TRUST_PROXY.
-    expect(req.headers[CLIENT_IP_HEADER]).toBe('198.51.100.7');
+    expect(handled.headers[CLIENT_IP_HEADER]).toMatch(/127\.0\.0\.1$/);
   });
 
   it('should return auth configuration from injected config', async () => {
-    mockEnvConfig.oauthProviders = ['google', 'github'];
+    env.oauthProviders = ['google', 'github'];
 
-    const controller = new AuthController(mockPrisma, mockAuth, mockConfigService);
-    const config = await controller.getConfig();
-    expect(config.devLoginEnabled).toBe(true);
-    expect(config.allowSignups).toBe(true);
-    expect(config.isFirstAccountSetup).toBe(false);
-    expect(config.providers).toEqual(['google', 'github']);
+    const { body } = await request(app.getHttpServer()).get('/api/auth/config');
+
+    expect(body.devLoginEnabled).toBe(true);
+    expect(body.allowSignups).toBe(true);
+    expect(body.isFirstAccountSetup).toBe(false);
+    expect(body.providers).toEqual(['google', 'github']);
   });
 
   it('reports first-account setup on an empty instance, but never in demo mode', async () => {
-    mockPrisma.user.count.mockResolvedValueOnce(0);
-    const controller = new AuthController(mockPrisma, mockAuth, mockConfigService);
-    expect((await controller.getConfig()).isFirstAccountSetup).toBe(true);
+    prisma.user.count.mockResolvedValueOnce(0);
+    const first = await request(app.getHttpServer()).get('/api/auth/config');
+    expect(first.body.isFirstAccountSetup).toBe(true);
 
     // A demo instance is empty after every nightly wipe, and nobody there is setting up an administrator.
-    mockEnvConfig.DEMO_MODE = true;
-    mockPrisma.user.count.mockResolvedValueOnce(0);
-    expect((await controller.getConfig()).isFirstAccountSetup).toBe(false);
+    env.DEMO_MODE = true;
+    prisma.user.count.mockResolvedValueOnce(0);
+    const demo = await request(app.getHttpServer()).get('/api/auth/config');
+    expect(demo.body.isFirstAccountSetup).toBe(false);
   });
 
   it('should reject dev login when disabled or in production', async () => {
-    mockEnvConfig.ENABLE_DEV_LOGIN = false;
-    const controller = new AuthController(mockPrisma, mockAuth, mockConfigService);
-    const res: any = { cookie: vi.fn(), status: vi.fn(), json: vi.fn() };
+    env.ENABLE_DEV_LOGIN = false;
 
-    await expect(controller.devLogin({ email: 'q@local.com' }, res)).rejects.toThrow(
-      'Dev login is disabled',
-    );
+    const response = await request(app.getHttpServer())
+      .post('/api/auth/dev-login')
+      .send({ email: 'q@local.com' });
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe('Dev login is disabled');
   });
 
   it('should reject dev login for non-test email domains (e.g. victim@corporate.com)', async () => {
-    const controller = new AuthController(mockPrisma, mockAuth, mockConfigService);
-    const res: any = { cookie: vi.fn(), status: vi.fn(), json: vi.fn() };
+    const response = await request(app.getHttpServer())
+      .post('/api/auth/dev-login')
+      .send({ email: 'victim@corporate.com' });
 
-    await expect(controller.devLogin({ email: 'victim@corporate.com' }, res)).rejects.toThrow(
-      'Dev login is restricted to local development test domains',
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      'Dev login is restricted to local development test domains (*@local.com, *@canvhq.internal)',
     );
   });
 
   it('should issue dev login session and cookie for q@local.com using injected secret', async () => {
-    const controller = new AuthController(mockPrisma, mockAuth, mockConfigService);
-    mockPrisma.user.findUnique.mockResolvedValueOnce({
+    prisma.user.findUnique.mockResolvedValueOnce({
       id: 'usr_1',
       name: 'Qarib',
       email: 'q@local.com',
       image: null,
     });
-    mockPrisma.account.findFirst.mockResolvedValueOnce({ id: 'acc_1' });
-    mockPrisma.session.create.mockResolvedValueOnce({
+    prisma.account.findFirst.mockResolvedValueOnce({ id: 'acc_1' });
+    prisma.session.create.mockResolvedValueOnce({
       id: 'ses_1',
       token: 'dev_tok_test',
       userId: 'usr_1',
       expiresAt: new Date(),
     });
 
-    const res: any = {
-      cookie: vi.fn(),
-      status: vi.fn().mockReturnThis(),
-      json: vi.fn().mockReturnThis(),
-    };
+    const response = await request(app.getHttpServer())
+      .post('/api/auth/dev-login')
+      .send({ email: 'q@local.com' });
 
-    await controller.devLogin({ email: 'q@local.com' }, res);
-
-    expect(res.cookie).toHaveBeenCalledWith(
-      'better-auth.session_token',
-      expect.stringContaining('dev_tok_'),
-      expect.any(Object),
-    );
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({ success: true, user: { id: 'usr_1' } });
+    expect(response.headers['set-cookie']?.[0]).toContain('better-auth.session_token=dev_tok_');
   });
 });

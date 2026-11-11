@@ -20,7 +20,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "oxlint -c oxlint.json --max-warnings 174 .",
+    "lint": "oxlint -c oxlint.json --max-warnings 163 .",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
