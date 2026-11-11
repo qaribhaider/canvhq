@@ -5,11 +5,11 @@
 # ==========================================
 
 # STAGE 1: Build Frontend Assets
-FROM node:24-alpine AS frontend-builder
+FROM node:26-alpine AS frontend-builder
 WORKDIR /app/frontend
 
 COPY frontend/package.json ./
-RUN corepack enable && corepack install
+RUN npm install --global corepack@0.36.0 && corepack enable && corepack install
 
 COPY frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
@@ -18,11 +18,11 @@ COPY frontend/ ./
 RUN pnpm run build
 
 # STAGE 2: Build Backend Application
-FROM node:24-alpine AS backend-builder
+FROM node:26-alpine AS backend-builder
 WORKDIR /app/backend
 
 COPY backend/package.json ./
-RUN corepack enable && corepack install
+RUN npm install --global corepack@0.36.0 && corepack enable && corepack install
 
 COPY backend/pnpm-lock.yaml backend/pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
@@ -35,7 +35,7 @@ COPY backend/ ./
 RUN pnpm run build
 
 # STAGE 3: Production Runner
-FROM node:24-alpine AS runner
+FROM node:26-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -43,8 +43,10 @@ ENV PORT=3000
 ENV SCARF_ANALYTICS=false
 ENV COREPACK_HOME=/usr/local/share/corepack
 
-# Install runtime utilities for healthcheck, backup and package management
+# Install runtime utilities for healthcheck, backup and package management. Node 26 no longer ships
+# corepack, so it is installed from npm (which is removed again below).
 RUN apk add --no-cache curl postgresql16-client && \
+    npm install --global corepack@0.36.0 && \
     corepack enable
 
 # Prepare corepack for pnpm from package.json without hard-coding the version
