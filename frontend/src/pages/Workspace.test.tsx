@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, type NavigateOptions, type To } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { AbilityBuilder, createMongoAbility, type MongoAbility } from '@casl/ability';
 import { packRules } from '@casl/ability/extra';
 import { Workspace } from './Workspace';
-import { useSession, signOut, authClient } from '@/lib/auth-client';
+import { signOut } from '@/lib/auth-client';
 import { APP_VERSION } from '@/lib/constants';
 import { errorResponse, jsonResponse } from '@/test/http';
 
@@ -43,12 +43,18 @@ function requestUrl(input: RequestInfo | URL): string {
   return input.url;
 }
 
-vi.mock('@/lib/auth-client', () => ({
+// Handles to the auth client's stubs, so a test can script them without casting the real client's types.
+const authStubs = vi.hoisted(() => ({
   useSession: vi.fn(),
+  listOrganizations: vi.fn(),
+}));
+
+vi.mock('@/lib/auth-client', () => ({
+  useSession: authStubs.useSession,
   signOut: vi.fn(),
   authClient: {
     organization: {
-      list: vi.fn(),
+      list: authStubs.listOrganizations,
       create: vi.fn(),
       setActive: vi.fn().mockResolvedValue({}),
     },
@@ -77,7 +83,7 @@ vi.mock('react-router-dom', async () => {
     ...actual,
     useNavigate: () => {
       const realNavigate = actual.useNavigate();
-      return (to: any, options?: any) => {
+      return (to: To, options?: NavigateOptions) => {
         if (options !== undefined) {
           mockNavigate(to, options);
         } else {
@@ -168,13 +174,13 @@ describe('Workspace Dashboard Component', () => {
       },
     });
     vi.clearAllMocks();
-    (useSession as any).mockReturnValue({
+    authStubs.useSession.mockReturnValue({
       data: {
         user: { id: 'u-dev-lead', name: 'Dev Lead', email: 'lead@canvhq.internal' },
         session: { id: 'sess-1' },
       },
     });
-    (authClient.organization.list as any).mockResolvedValue({
+    authStubs.listOrganizations.mockResolvedValue({
       data: [
         { id: 'org-1', name: 'Acme Eng', slug: 'acme-eng', role: 'owner' },
         { id: 'org-2', name: 'Core Platform', slug: 'core-platform', role: 'owner' },
@@ -211,7 +217,7 @@ describe('Workspace Dashboard Component', () => {
   });
 
   it('redirects to /create-workspace if user has zero workspaces', async () => {
-    (authClient.organization.list as any).mockResolvedValue({ data: [] });
+    authStubs.listOrganizations.mockResolvedValue({ data: [] });
 
     renderWorkspace();
 
@@ -240,7 +246,7 @@ describe('Workspace Dashboard Component', () => {
   });
 
   it('sorts workspaces in switcher from oldest to newest', async () => {
-    (authClient.organization.list as any).mockResolvedValue({
+    authStubs.listOrganizations.mockResolvedValue({
       data: [
         {
           id: 'org-newer',
@@ -708,8 +714,21 @@ describe('Workspace Dashboard Component', () => {
 
   it('wraps a project created after a workspace switch with the new workspace key', async () => {
     const { resolveOrgKey, provisionProjectKeys } = await import('@/lib/keys');
+    // One real key per wrapped value, so the assertion below can tell which workspace's key was used.
+    const generateKey = () =>
+      crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+    const [org1Key, org2Key, otherKey] = await Promise.all([
+      generateKey(),
+      generateKey(),
+      generateKey(),
+    ]);
+    const keysByWrapped = new Map([
+      ['org-1-key', org1Key],
+      ['org-2-key', org2Key],
+    ]);
+    // The implementation outlives this test (clearAllMocks keeps it), so an unknown value still gets a key.
     vi.mocked(resolveOrgKey).mockImplementation(
-      async (encryptedOrgKey) => ({ label: encryptedOrgKey ?? 'missing' }) as unknown as CryptoKey,
+      async (encryptedOrgKey) => keysByWrapped.get(encryptedOrgKey ?? '') ?? otherKey,
     );
 
     stubApi((url, init) => {
@@ -766,11 +785,8 @@ describe('Workspace Dashboard Component', () => {
     });
 
     const [provisioningArgs] = vi.mocked(provisionProjectKeys).mock.calls.at(-1)!;
-    expect(provisioningArgs).toMatchObject({
-      orgKey: { label: 'org-2-key' },
-      workspaceId: 'org-2',
-      workspaceKeyVersion: 3,
-    });
+    expect(provisioningArgs?.orgKey).toBe(org2Key);
+    expect(provisioningArgs).toMatchObject({ workspaceId: 'org-2', workspaceKeyVersion: 3 });
   });
 
   it('selects the new project and closes the form after creating a project', async () => {
