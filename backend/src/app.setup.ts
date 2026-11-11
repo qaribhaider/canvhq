@@ -6,6 +6,8 @@ import compression from 'compression';
 import { ZodValidationPipe, cleanupOpenApiDoc } from 'nestjs-zod';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
 import type { EnvConfig } from './config/env.schema.js';
+import { indexHtmlWithSiteUrl } from './static/index-html.js';
+import { resolveStaticDirectory } from './static/static-assets.module.js';
 
 export interface CspConfigInput {
   UMAMI_WEBSITE_ID?: string | undefined;
@@ -89,6 +91,16 @@ export function setupApp(app: INestApplication): void {
   );
 
   app.use(compression());
+
+  // Registered before the static files are, so the page shell is the one with this instance's address.
+  const staticDir = resolveStaticDirectory(configService.get('STATIC_DIR', { infer: true }));
+  const pageShell = staticDir
+    ? indexHtmlWithSiteUrl(staticDir, configService.get('FRONTEND_URL', { infer: true }))
+    : null;
+  if (pageShell) {
+    app.use(pageShell);
+  }
+
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
 
