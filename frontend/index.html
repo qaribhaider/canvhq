@@ -21,7 +21,12 @@
       content="CanvHQ is a self-hostable, end-to-end encrypted spatial whiteboard."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/icon-512.png" />
+    <!-- Link previews need an absolute address; a path like /banner.png shows as a broken image. -->
+    <meta property="og:image" content="https://canvhq-demo.quore.dev/banner.png" />
+    <meta property="og:image:width" content="2560" />
+    <meta property="og:image:height" content="1280" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://canvhq-demo.quore.dev/banner.png" />
     <title>CanvHQ - End-to-end encrypted whiteboard</title>
   </head>
   <body>
