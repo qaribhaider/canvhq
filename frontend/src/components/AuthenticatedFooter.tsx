@@ -16,7 +16,7 @@ export function AuthenticatedFooter({
     <footer
       className={`w-full bg-white/95 backdrop-blur-md border-t border-border font-mono text-[11px] text-ink-muted sticky bottom-0 z-40 ${className}`}
     >
-      <div className="w-full max-w-[94rem] mx-auto px-4 sm:px-8 h-10 flex items-center justify-between">
+      <div className="w-full max-w-376 mx-auto px-4 sm:px-8 h-10 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-success" />
           <span className="font-semibold text-ink tracking-wider">E2EE</span>

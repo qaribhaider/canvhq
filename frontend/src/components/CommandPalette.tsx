@@ -71,14 +71,14 @@ export function CommandPalette({ isOpen, onClose, boards, onSelectBoard }: Comma
     >
       {/* Search Input Bar */}
       <div className="flex items-center px-4 py-3.5 border-b border-border gap-3 bg-white">
-        <Search className="w-4 h-4 text-brand flex-shrink-0" />
+        <Search className="w-4 h-4 text-brand shrink-0" />
         <input
           ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by title or project..."
-          className="flex-1 text-xs sm:text-sm bg-transparent outline-none placeholder:text-ink-subtle text-ink font-medium"
+          className="flex-1 text-xs sm:text-sm bg-transparent outline-hidden placeholder:text-ink-subtle text-ink font-medium"
         />
         <button
           type="button"

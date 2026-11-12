@@ -93,7 +93,7 @@ export function WorkspaceManagement() {
         onOpenCommandPalette={() => setIsCommandOpen(true)}
       />
 
-      <div className="pt-14 sm:pt-16 flex-1 flex flex-col w-full max-w-[94rem] mx-auto">
+      <div className="pt-14 sm:pt-16 flex-1 flex flex-col w-full max-w-376 mx-auto">
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-[244px_minmax(0,1fr)] min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)]">
           <ManagementSidebar
             workspace={workspace}

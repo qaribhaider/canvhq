@@ -112,7 +112,7 @@ export function Modal({
         aria-describedby={effectiveDescId}
         tabIndex={-1}
         className={cn(
-          'relative w-full max-w-md bg-white border border-border rounded-2xl shadow-xl overflow-hidden focus:outline-none animate-in zoom-in-95 duration-150',
+          'relative w-full max-w-md bg-white border border-border rounded-2xl shadow-xl overflow-hidden focus:outline-hidden animate-in zoom-in-95 duration-150',
           className,
         )}
       >

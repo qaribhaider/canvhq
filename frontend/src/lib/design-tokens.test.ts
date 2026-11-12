@@ -25,7 +25,6 @@ function getSourceFiles(dir: string, baseDir: string = dir): string[] {
 
 describe('Design Tokens Enforcement', () => {
   const srcDir = path.resolve(__dirname, '..');
-  const tailwindConfigFile = path.resolve(srcDir, '../tailwind.config.js');
   const indexCssFile = path.resolve(srcDir, 'index.css');
 
   it('contains zero arbitrary hex classes or inline hex styles anywhere in the app', () => {
@@ -59,40 +58,28 @@ describe('Design Tokens Enforcement', () => {
     expect(offenders).toEqual([]);
   });
 
-  it('only uses colour opacity steps Tailwind generates, and never glues two classes together', () => {
-    const generatedSteps = new Set([0, 5, 10, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90, 95, 100]);
-    const opacityClass =
-      /\b(?:bg|text|border|ring|fill|stroke|from|to|via)-[a-z][a-z0-9-]*\/(\d+)\b/g;
+  it('never glues two classes together after a colour opacity', () => {
     const gluedClasses = /\b[a-z][a-z0-9-]*\/\d+[a-z]/;
     const problems: string[] = [];
 
     for (const relPath of getSourceFiles(srcDir)) {
       const content = fs.readFileSync(path.join(srcDir, relPath), 'utf-8');
-      for (const [match, step] of content.matchAll(opacityClass)) {
-        if (!generatedSteps.has(Number(step)))
-          problems.push(`${relPath}: ${match} is not generated`);
-      }
       if (gluedClasses.test(content)) problems.push(`${relPath}: two classes run together`);
     }
 
     expect(problems).toEqual([]);
   });
 
-  it('contains zero dark: utility classes, .dark selectors, or darkMode configuration', () => {
-    // 1. Check tailwind.config.js
-    if (fs.existsSync(tailwindConfigFile)) {
-      const configContent = fs.readFileSync(tailwindConfigFile, 'utf-8');
-      expect(configContent).not.toContain('darkMode');
-    }
-
-    // 2. Check index.css
+  it('contains zero dark: utility classes, .dark selectors, or dark variants', () => {
+    // 1. Check index.css (it is also where a `@custom-variant dark` would be declared)
     if (fs.existsSync(indexCssFile)) {
       const cssContent = fs.readFileSync(indexCssFile, 'utf-8');
       expect(cssContent).not.toContain('.dark');
       expect(cssContent).not.toContain('dark:');
+      expect(cssContent).not.toContain('custom-variant dark');
     }
 
-    // 3. Check all source files for dark: classes
+    // 2. Check all source files for dark: classes
     const sourceFiles = getSourceFiles(srcDir);
     const darkClasses: { file: string; count: number }[] = [];
 

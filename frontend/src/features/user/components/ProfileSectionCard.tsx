@@ -24,7 +24,7 @@ export function ProfileSectionCard({
   return (
     <div
       id={id}
-      className={`scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border shadow-xs p-6 flex flex-col ${gap} ${
+      className={`scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border shadow-2xs p-6 flex flex-col ${gap} ${
         isDanger ? 'border-danger-border' : 'border-border'
       }`}
     >

@@ -57,7 +57,7 @@ export function WorkspaceDetailsSection({
   return (
     <div
       id="general"
-      className="scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border border-border shadow-xs p-6 flex flex-col gap-4"
+      className="scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border border-border shadow-2xs p-6 flex flex-col gap-4"
     >
       <div className="flex items-center justify-between border-b border-border-subtle pb-3.5">
         <div className="flex items-center gap-2.5">
@@ -117,7 +117,7 @@ export function WorkspaceDetailsSection({
             autoFocus
             required
             disabled={!canUpdate}
-            className="h-7 px-2 text-xs border border-ink rounded-lg outline-none flex-1"
+            className="h-7 px-2 text-xs border border-ink rounded-lg outline-hidden flex-1"
           />
           <button
             type="submit"

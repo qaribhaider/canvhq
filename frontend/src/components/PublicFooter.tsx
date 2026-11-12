@@ -6,7 +6,7 @@ export function PublicFooter() {
 
   return (
     <footer className="w-full bg-paper border-t border-border font-mono text-[11px] text-ink-muted py-4 px-4 sm:px-8">
-      <div className="max-w-[94rem] mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
+      <div className="max-w-376 mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
         <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 sm:gap-3">
           <span className="font-medium text-ink">© {currentYear} CanvHQ</span>
           <span className="text-border-strong">·</span>

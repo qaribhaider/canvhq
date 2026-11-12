@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
@@ -54,6 +55,7 @@ export default defineConfig({
   define: { BUILD_VERSION: JSON.stringify(packageVersion()) },
   plugins: [
     react(),
+    tailwindcss(),
     selfHostedExcalidrawFonts(),
     // Excalidraw loads its fonts from a public CDN unless told where they are (see
     // public/excalidraw-config.js).

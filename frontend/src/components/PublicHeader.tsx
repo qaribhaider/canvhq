@@ -25,7 +25,7 @@ export function PublicHeader({
     <header
       className={`${fixed ? 'fixed top-0 left-0 right-0 z-40' : 'w-full'} bg-white/90 backdrop-blur-md border-b border-border`}
     >
-      <div className="h-14 sm:h-16 w-full max-w-[94rem] mx-auto px-4 sm:px-8 flex items-center justify-between">
+      <div className="h-14 sm:h-16 w-full max-w-376 mx-auto px-4 sm:px-8 flex items-center justify-between">
         <div className="flex items-center gap-4 sm:gap-8">
           <Link to="/" className="flex items-center gap-2.5 group" aria-label="CanvHQ home">
             <CanvLogo className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
@@ -87,7 +87,7 @@ export function PublicHeader({
             </Link>
             <Link
               to="/login"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-ink hover:bg-ink-hover rounded-lg shadow-xs transition-all hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-ink hover:bg-ink-hover rounded-lg shadow-2xs transition-all hover:-translate-y-0.5 active:translate-y-0"
             >
               <span>Get Started</span>
               <span className="text-xs">↗</span>

@@ -238,7 +238,7 @@ export function Privacy() {
         <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-border">
           <Link
             to={session ? '/workspace' : '/login'}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border-strong text-xs font-semibold text-ink rounded-lg shadow-xs hover:bg-surface-warm hover:border-border-strong hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border-strong text-xs font-semibold text-ink rounded-lg shadow-2xs hover:bg-surface-warm hover:border-border-strong hover:-translate-y-0.5 transition-all"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>{session ? 'Back to Workspace' : 'Back to Sign In'}</span>

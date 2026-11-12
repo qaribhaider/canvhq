@@ -101,7 +101,7 @@ function DeleteWorkspaceModal({
             placeholder={workspace.name}
             autoFocus
             required
-            className="h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink outline-none focus:bg-white focus:border-danger font-medium"
+            className="h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink outline-hidden focus:bg-white focus:border-danger font-medium"
           />
         </div>
 
@@ -134,7 +134,7 @@ export function WorkspaceDangerZone({
   return (
     <div
       id="danger"
-      className="scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border border-danger-border shadow-xs p-6 flex flex-col gap-4"
+      className="scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border border-danger-border shadow-2xs p-6 flex flex-col gap-4"
     >
       <div className="flex items-center justify-between border-b border-danger-light pb-3.5">
         <div className="flex items-center gap-2.5">
@@ -163,7 +163,7 @@ export function WorkspaceDangerZone({
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="h-9 px-4 bg-danger hover:bg-danger-hover text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-xs"
+            className="h-9 px-4 bg-danger hover:bg-danger-hover text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-2xs"
           >
             Delete Workspace
           </button>

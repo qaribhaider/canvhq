@@ -67,7 +67,7 @@ export function BoardTitleEditor({ title, isViewer, onRename }: BoardTitleEditor
           onBlur={() => void save()}
           onKeyDown={(e) => e.key === 'Enter' && void save()}
           autoFocus
-          className="h-7 px-2 font-mono text-xs font-bold text-ink bg-white border border-brand rounded-lg outline-none"
+          className="h-7 px-2 font-mono text-xs font-bold text-ink bg-white border border-brand rounded-lg outline-hidden"
         />
         <button
           onClick={() => void save()}

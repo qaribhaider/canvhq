@@ -98,7 +98,7 @@ export function InviteMemberModal({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="colleague@company.com"
             required
-            className="h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink outline-none focus:bg-white focus:border-ink transition-colors"
+            className="h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink outline-hidden focus:bg-white focus:border-ink transition-colors"
           />
         </div>
 
@@ -110,7 +110,7 @@ export function InviteMemberModal({
             id="invite-role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="h-9 px-3 pr-8 bg-paper border border-border rounded-xl font-mono text-xs text-ink outline-none appearance-none cursor-pointer"
+            className="h-9 px-3 pr-8 bg-paper border border-border rounded-xl font-mono text-xs text-ink outline-hidden appearance-none cursor-pointer"
             style={selectChevronStyle}
           >
             <option value="editor">Editor</option>

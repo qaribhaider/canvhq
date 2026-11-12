@@ -212,7 +212,7 @@ export function Workspace() {
         rotationProgress={rotationProgress}
       />
 
-      <div className="pt-14 sm:pt-16 flex-1 flex flex-col w-full max-w-[94rem] mx-auto">
+      <div className="pt-14 sm:pt-16 flex-1 flex flex-col w-full max-w-376 mx-auto">
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-[244px_minmax(0,1fr)] min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)]">
           <aside className="w-full lg:w-[244px] bg-surface border-r border-border p-4 lg:p-5 flex flex-col min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)] z-20">
             <div className="flex flex-col lg:sticky lg:top-20">

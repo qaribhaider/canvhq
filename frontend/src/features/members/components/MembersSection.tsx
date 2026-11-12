@@ -86,7 +86,7 @@ export function MembersSection({
   return (
     <div
       id="members"
-      className="scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border border-border shadow-xs p-6 flex flex-col gap-5"
+      className="scroll-mt-24 sm:scroll-mt-28 bg-white rounded-2xl border border-border shadow-2xs p-6 flex flex-col gap-5"
     >
       <div className="flex items-center justify-between border-b border-border-subtle pb-3.5">
         <div className="flex items-center gap-2.5">
@@ -103,7 +103,7 @@ export function MembersSection({
             <button
               type="button"
               onClick={() => setIsInviteOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shadow-2xs"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>＋ Invite member</span>

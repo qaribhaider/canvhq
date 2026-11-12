@@ -59,7 +59,7 @@ export function UserNavDropdown() {
         title={`${displayName} (Account menu)`}
         aria-label="User profile and account settings"
         aria-expanded={isOpen}
-        className="flex items-center gap-1.5 p-0.5 rounded-full hover:ring-2 hover:ring-brand-border focus:outline-none transition-all cursor-pointer group"
+        className="flex items-center gap-1.5 p-0.5 rounded-full hover:ring-2 hover:ring-brand-border focus:outline-hidden transition-all cursor-pointer group"
       >
         <div className="w-7 h-7 rounded-full bg-brand-subtle border border-brand-border text-brand-strong flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
           {initial}

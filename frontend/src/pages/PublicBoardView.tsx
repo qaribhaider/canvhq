@@ -96,7 +96,7 @@ export function PublicBoardView() {
   return (
     <div className="w-screen h-screen flex flex-col bg-paper overflow-hidden select-none font-sans antialiased">
       {/* Precision Read-Only Header */}
-      <header className="h-14 w-full bg-white/95 backdrop-blur-md border-b border-border px-4 sm:px-6 flex items-center justify-between z-20 flex-shrink-0">
+      <header className="h-14 w-full bg-white/95 backdrop-blur-md border-b border-border px-4 sm:px-6 flex items-center justify-between z-20 shrink-0">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 font-mono text-xs">
             <CanvLogo className="w-6 h-6 shrink-0" />
@@ -179,7 +179,7 @@ export function PublicBoardView() {
 
               {keyError && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{keyError}</span>
                 </div>
               )}
@@ -190,7 +190,7 @@ export function PublicBoardView() {
                   placeholder="Paste #key=... or base64 key"
                   value={manualKeyInput}
                   onChange={(e) => setManualKeyInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-border focus:border-brand focus:outline-none text-xs font-mono bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border focus:border-brand focus:outline-hidden text-xs font-mono bg-white"
                   autoFocus
                 />
                 <button
