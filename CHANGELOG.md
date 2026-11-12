@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.3](https://github.com/qaribhaider/canvhq/compare/v0.2.2...v0.2.3) (2026-11-12)
+
+
+### Maintenance
+
+* **deps:** bump the actions group with 5 updates ([#33](https://github.com/qaribhaider/canvhq/issues/33)) ([a587cf6](https://github.com/qaribhaider/canvhq/commit/a587cf635b9fa9868ae0f12f1b04022b639a7e21))
+* **deps:** bump the backend-minor-and-patch group across 1 directory with 17 updates ([#38](https://github.com/qaribhaider/canvhq/issues/38)) ([f9107a9](https://github.com/qaribhaider/canvhq/commit/f9107a986280edc92bb24f43e24af97cd151bd86))
+* list maintenance commits in the release notes ([#41](https://github.com/qaribhaider/canvhq/issues/41)) ([e526952](https://github.com/qaribhaider/canvhq/commit/e526952b1d4933d07cded90c2b24f727d89023bd))
+* move to Node 26 and its type definitions ([#39](https://github.com/qaribhaider/canvhq/issues/39)) ([7a160ce](https://github.com/qaribhaider/canvhq/commit/7a160ce887f3607aff94f3d7bd8d6c462b63e698))
+* move to Tailwind 4 ([#40](https://github.com/qaribhaider/canvhq/issues/40)) ([2434f1c](https://github.com/qaribhaider/canvhq/commit/2434f1c3d02e56e4fb3621d5e51810dd3cc63a4e))
+
 ## [0.2.2](https://github.com/qaribhaider/canvhq/compare/v0.2.1...v0.2.2) (2026-11-11)
 
 
