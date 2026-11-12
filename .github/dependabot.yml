@@ -1,7 +1,7 @@
 # Weekly, and grouped: one pull request for the backend's minor and patch updates, one for the
 # frontend's, one for the workflow actions and one for Docker. A new major version always arrives
 # on its own, so a risky upgrade (Prisma, Nest, Excalidraw) never holds up the rest.
-# The "chore" prefix keeps these out of the release notes.
+# Their prefixes (chore, ci, build) list them under "Maintenance" in the release notes.
 version: 2
 updates:
   - package-ecosystem: npm
