@@ -2,8 +2,10 @@ name: Pull request title
 
 # Pull requests are squash-merged, so the title becomes the commit message on main, and the release
 # notes and the next version number are built from those messages. It has to read like one:
-# `feat: ...` (a new version), `fix: ...` (a patch), or `docs:`, `chore:`, `ci:`, `test:`,
-# `refactor:`, `perf:`, `build:`, `style:`, `revert:` (not part of the notes).
+# `feat: ...` (a new version), `fix: ...` (a patch), `perf:` and `revert:` (a patch), or
+# `chore:`, `build:`, `ci:` for maintenance (a patch, listed under "Maintenance"), or `docs:`,
+# `test:`, `refactor:`, `style:` (not part of the notes). The sections live in
+# release-please-config.json.
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]

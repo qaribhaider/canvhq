@@ -6,6 +6,19 @@
   "bump-minor-pre-major": true,
   "include-component-in-tag": false,
   "changelog-path": "CHANGELOG.md",
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "perf", "section": "Performance Improvements" },
+    { "type": "revert", "section": "Reverts" },
+    { "type": "chore", "section": "Maintenance" },
+    { "type": "build", "section": "Maintenance" },
+    { "type": "ci", "section": "Maintenance" },
+    { "type": "docs", "section": "Documentation", "hidden": true },
+    { "type": "style", "section": "Styles", "hidden": true },
+    { "type": "refactor", "section": "Code Refactoring", "hidden": true },
+    { "type": "test", "section": "Tests", "hidden": true }
+  ],
   "packages": {
     ".": {
       "package-name": "canvhq",

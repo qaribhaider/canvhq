@@ -39,7 +39,7 @@ pnpm run test:e2e        # with the dev stack running; see frontend/e2e/README.m
 
 ## Pull requests and releases
 
-Pull requests are squash-merged, so the **title becomes the commit message** and a check enforces its form: `feat: ...` for something users will notice (a new version), `fix: ...` for a bug fix (a patch), or `docs:`, `chore:`, `test:`, `ci:`, `refactor:`, `perf:`, `build:` for the rest, which stay out of the release notes. Maintainers release by merging the standing "release" pull request that a bot keeps up to date; that creates the tag, the GitHub release and the Docker image. You never edit the version by hand.
+Pull requests are squash-merged, so the **title becomes the commit message** and a check enforces its form: `feat: ...` for something users will notice (a new version), `fix: ...` for a bug fix (a patch), `chore:`, `build:` or `ci:` for maintenance such as dependency and tooling updates (also a patch, listed under "Maintenance" in the release notes), or `docs:`, `test:`, `refactor:` for the rest, which stay out of the release notes. Maintainers release by merging the standing "release" pull request that a bot keeps up to date; that creates the tag, the GitHub release and the Docker image. You never edit the version by hand.
 
 ## Rules that are easy to miss
 
