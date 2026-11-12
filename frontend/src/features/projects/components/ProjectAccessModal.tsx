@@ -109,7 +109,7 @@ export function ProjectAccessModal({
                 aria-label="Workspace member to assign"
                 value={assignUserId}
                 onChange={(e) => setAssignUserId(e.target.value)}
-                className="h-9 px-3 pr-8 bg-white border border-border text-xs text-ink rounded-lg outline-none flex-1 min-w-0 truncate appearance-none cursor-pointer"
+                className="h-9 px-3 pr-8 bg-white border border-border text-xs text-ink rounded-lg outline-hidden flex-1 min-w-0 truncate appearance-none cursor-pointer"
                 style={selectChevronStyle}
               >
                 <option value="">Select workspace member to assign...</option>
@@ -124,7 +124,7 @@ export function ProjectAccessModal({
                 aria-label="Project role"
                 value={assignRole}
                 onChange={(e) => setAssignRole(e.target.value)}
-                className="h-9 px-3 pr-8 bg-white border border-border text-xs rounded-lg outline-none font-mono shrink-0 appearance-none cursor-pointer"
+                className="h-9 px-3 pr-8 bg-white border border-border text-xs rounded-lg outline-hidden font-mono shrink-0 appearance-none cursor-pointer"
                 style={selectChevronStyle}
               >
                 <option value="editor">Editor</option>
@@ -136,7 +136,7 @@ export function ProjectAccessModal({
                 type="button"
                 onClick={() => void assign()}
                 disabled={!assignUserId}
-                className="h-9 px-4 bg-ink text-white text-xs font-semibold rounded-lg hover:bg-ink-hover disabled:opacity-50 cursor-pointer shadow-xs whitespace-nowrap shrink-0"
+                className="h-9 px-4 bg-ink text-white text-xs font-semibold rounded-lg hover:bg-ink-hover disabled:opacity-50 cursor-pointer shadow-2xs whitespace-nowrap shrink-0"
               >
                 Assign Member
               </button>
@@ -205,7 +205,7 @@ export function ProjectAccessModal({
                               aria-label={`Role for ${pm.name}`}
                               value={pm.role}
                               onChange={(e) => void access.changeRole(pm, e.target.value)}
-                              className="font-mono text-[11px] bg-paper px-2.5 py-1 pr-8 rounded-md border border-border outline-none appearance-none cursor-pointer"
+                              className="font-mono text-[11px] bg-paper px-2.5 py-1 pr-8 rounded-md border border-border outline-hidden appearance-none cursor-pointer"
                               style={selectChevronStyle}
                             >
                               <option value="admin">Project admin</option>
@@ -257,7 +257,7 @@ export function ProjectAccessModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+            className="px-4 py-2 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shadow-2xs"
           >
             Done
           </button>

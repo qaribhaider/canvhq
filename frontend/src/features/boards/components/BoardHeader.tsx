@@ -41,7 +41,7 @@ export function BoardHeader({
   const projectLabel = capitalizeFirst(projectName);
 
   return (
-    <header className="h-14 w-full bg-white/90 backdrop-blur-md border-b border-border px-4 sm:px-6 flex items-center justify-between z-20 flex-shrink-0">
+    <header className="h-14 w-full bg-white/90 backdrop-blur-md border-b border-border px-4 sm:px-6 flex items-center justify-between z-20 shrink-0">
       <div className="flex items-center gap-3">
         <Link
           to={`/w/${workspaceRef}`}
@@ -60,7 +60,7 @@ export function BoardHeader({
           >
             {workspaceLabel}
           </Link>
-          <ChevronRight className="w-3 h-3 text-border-strong flex-shrink-0" />
+          <ChevronRight className="w-3 h-3 text-border-strong shrink-0" />
           <Link
             to={projectId ? `/w/${workspaceRef}?project=${projectId}` : `/w/${workspaceRef}`}
             className="text-ink-muted hover:text-ink font-medium truncate max-w-[140px] transition-colors capitalize"
@@ -68,7 +68,7 @@ export function BoardHeader({
           >
             {projectLabel}
           </Link>
-          <ChevronRight className="w-3 h-3 text-border-strong flex-shrink-0" />
+          <ChevronRight className="w-3 h-3 text-border-strong shrink-0" />
         </div>
 
         <BoardTitleEditor title={title} isViewer={isViewer} onRename={onRename} />

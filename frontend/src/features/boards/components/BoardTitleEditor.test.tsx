@@ -77,7 +77,7 @@ describe('BoardTitleEditor', () => {
     expect(screen.getByText('Mesh')).toBeInTheDocument();
   });
 
-  it('sends one rename when Enter is followed by a blur', async () => {
+  it('sends one rename when Enter is followed by a blur-sm', async () => {
     const onRename = vi.fn().mockResolvedValue(undefined);
     render(<BoardTitleEditor title="Mesh" isViewer={false} onRename={onRename} />);
 

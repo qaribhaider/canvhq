@@ -57,7 +57,7 @@ export function GrantAccessDialog({
           type="button"
           disabled={isGranting}
           onClick={() => void confirm()}
-          className="px-4 py-2 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+          className="px-4 py-2 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
         >
           {isGranting ? 'Granting...' : 'Confirm and grant'}
         </button>

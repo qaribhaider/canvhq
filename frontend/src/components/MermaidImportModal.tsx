@@ -99,7 +99,7 @@ export function MermaidImportModal({ isOpen, onClose, onImport }: MermaidImportM
 
       {error && (
         <div className="p-3 bg-danger-subtle border border-danger-border rounded-xl text-danger text-xs flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-danger" />
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-danger" />
           <span className="leading-snug">{error}</span>
         </div>
       )}
@@ -124,7 +124,7 @@ export function MermaidImportModal({ isOpen, onClose, onImport }: MermaidImportM
           value={code}
           onChange={(e) => setCode(e.target.value)}
           rows={9}
-          className="w-full p-3 bg-paper border border-border rounded-xl text-xs font-mono text-ink outline-none focus:bg-white focus:border-ink resize-none transition-colors"
+          className="w-full p-3 bg-paper border border-border rounded-xl text-xs font-mono text-ink outline-hidden focus:bg-white focus:border-ink resize-none transition-colors"
           placeholder="graph TD..."
           spellCheck={false}
         />
@@ -142,7 +142,7 @@ export function MermaidImportModal({ isOpen, onClose, onImport }: MermaidImportM
           type="button"
           onClick={handleConvertAndInsert}
           disabled={isConverting || !code.trim()}
-          className="px-4 py-2 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold uppercase flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 shadow-sm"
+          className="px-4 py-2 bg-ink hover:bg-ink-hover text-white rounded-lg text-xs font-semibold uppercase flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
         >
           <Sparkles className="w-3.5 h-3.5 text-success-bright" />
           <span>{isConverting ? 'Converting...' : 'Insert into Canvas'}</span>

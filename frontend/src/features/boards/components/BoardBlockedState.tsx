@@ -30,7 +30,7 @@ export function BoardBlockedState({ reason, workspaceRef, onRetry }: BoardBlocke
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex items-center justify-center gap-1.5 w-full h-10 bg-ink text-white text-xs font-semibold rounded-xl hover:bg-ink-hover transition-colors font-mono uppercase shadow-sm cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 w-full h-10 bg-ink text-white text-xs font-semibold rounded-xl hover:bg-ink-hover transition-colors font-mono uppercase shadow-xs cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry

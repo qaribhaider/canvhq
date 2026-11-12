@@ -216,7 +216,7 @@ export function InviteAccept() {
 
             {error && (
               <div className="mb-5 p-3.5 bg-danger-soft border border-danger-soft-border text-danger-muted text-xs rounded-xl font-medium flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}

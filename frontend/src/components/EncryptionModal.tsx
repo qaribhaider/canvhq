@@ -92,7 +92,7 @@ export function EncryptionModal({
     >
       {/* Modal Title & Icon */}
       <div className="flex items-start gap-3.5">
-        <div className="w-10 h-10 bg-brand-subtle border border-brand-border text-brand-strong flex items-center justify-center flex-shrink-0 rounded-xl mt-0.5">
+        <div className="w-10 h-10 bg-brand-subtle border border-brand-border text-brand-strong flex items-center justify-center shrink-0 rounded-xl mt-0.5">
           {isSetup ? (
             <KeyRound className="w-5 h-5 text-brand-strong" />
           ) : (
@@ -114,7 +114,7 @@ export function EncryptionModal({
       {/* Friendly Safety Notice */}
       {isSetup && (
         <div className="p-3.5 bg-warning-subtle border border-warning-border text-warning text-xs leading-relaxed rounded-xl flex items-start gap-2.5">
-          <ShieldAlert className="w-4 h-4 text-warning flex-shrink-0 mt-0.5" />
+          <ShieldAlert className="w-4 h-4 text-warning shrink-0 mt-0.5" />
           <span>
             <strong>Keep your passphrase safe.</strong> We cannot reset your passphrase. If you lose
             it, your canvases cannot be opened.
@@ -125,7 +125,7 @@ export function EncryptionModal({
       {/* Error Alert */}
       {error && (
         <div className="p-3.5 bg-danger-subtle border border-danger-border text-danger text-xs rounded-xl flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-danger flex-shrink-0 mt-0.5" />
+          <AlertCircle className="w-4 h-4 text-danger shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
@@ -165,7 +165,7 @@ export function EncryptionModal({
                 onChange={(e) => setPassphrase(e.target.value)}
                 autoFocus
                 required
-                className="w-full h-10 px-3.5 bg-paper hover:bg-white focus:bg-white text-ink text-xs border border-border-strong hover:border-ink-subtle focus:border-brand rounded-xl outline-none shadow-2xs focus:ring-2 focus:ring-brand/30 transition-all"
+                className="w-full h-10 px-3.5 bg-paper hover:bg-white focus:bg-white text-ink text-xs border border-border-strong hover:border-ink-subtle focus:border-brand rounded-xl outline-hidden shadow-2xs focus:ring-2 focus:ring-brand/30 transition-all"
               />
             </div>
 
@@ -185,7 +185,7 @@ export function EncryptionModal({
                 value={confirmPassphrase}
                 onChange={(e) => setConfirmPassphrase(e.target.value)}
                 required
-                className="w-full h-10 px-3.5 bg-paper hover:bg-white focus:bg-white text-ink text-xs border border-border-strong hover:border-ink-subtle focus:border-brand rounded-xl outline-none shadow-2xs focus:ring-2 focus:ring-brand/30 transition-all"
+                className="w-full h-10 px-3.5 bg-paper hover:bg-white focus:bg-white text-ink text-xs border border-border-strong hover:border-ink-subtle focus:border-brand rounded-xl outline-hidden shadow-2xs focus:ring-2 focus:ring-brand/30 transition-all"
               />
             </div>
           </>
@@ -207,7 +207,7 @@ export function EncryptionModal({
               onChange={(e) => setPassphrase(e.target.value)}
               autoFocus
               required
-              className="w-full h-10 px-3.5 bg-paper hover:bg-white focus:bg-white text-ink text-xs border border-border-strong hover:border-ink-subtle focus:border-brand rounded-xl outline-none shadow-2xs focus:ring-2 focus:ring-brand/30 transition-all"
+              className="w-full h-10 px-3.5 bg-paper hover:bg-white focus:bg-white text-ink text-xs border border-border-strong hover:border-ink-subtle focus:border-brand rounded-xl outline-hidden shadow-2xs focus:ring-2 focus:ring-brand/30 transition-all"
             />
           </div>
         )}

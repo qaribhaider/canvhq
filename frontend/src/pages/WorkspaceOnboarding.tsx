@@ -32,7 +32,7 @@ export function WorkspaceOnboarding() {
       <div className="min-h-screen bg-paper flex flex-col justify-between font-sans">
         <PublicHeader />
         <main className="flex-1 flex items-center justify-center p-4">
-          <Card className="max-w-md w-full p-8 flex flex-col items-center text-center gap-4 bg-white border border-border shadow-sm rounded-2xl">
+          <Card className="max-w-md w-full p-8 flex flex-col items-center text-center gap-4 bg-white border border-border shadow-xs rounded-2xl">
             <h1 className="text-xl font-bold tracking-tight text-ink">
               You can't create another workspace
             </h1>

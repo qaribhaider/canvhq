@@ -105,7 +105,7 @@ export function Landing() {
             {/* Hero Left Column (Copy & Actions) */}
             <div className="lg:col-span-6 flex flex-col items-start text-left">
               {/* Release Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-border rounded-full text-[11px] font-mono text-ink-muted mb-6 shadow-xs">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-border rounded-full text-[11px] font-mono text-ink-muted mb-6 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-success" />
                 <span className="font-semibold text-ink">Open-source canvas</span>
                 <span className="text-border-strong">·</span>
@@ -131,7 +131,7 @@ export function Landing() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   to="/login"
-                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-ink text-white text-[13px] font-semibold rounded-lg shadow-xs hover:bg-ink-hover hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-ink text-white text-[13px] font-semibold rounded-lg shadow-2xs hover:bg-ink-hover hover:-translate-y-0.5 active:translate-y-0 transition-all"
                 >
                   <span>Explore your workspace</span>
                   <span className="text-sm transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -143,7 +143,7 @@ export function Landing() {
                   href="https://github.com/qaribhaider/canvhq"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-border-strong text-ink text-[13px] font-semibold rounded-lg shadow-xs hover:bg-surface-warm hover:border-border-strong hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-border-strong text-ink text-[13px] font-semibold rounded-lg shadow-2xs hover:bg-surface-warm hover:border-border-strong hover:-translate-y-0.5 active:translate-y-0 transition-all"
                 >
                   <svg
                     className="w-4 h-4 fill-current shrink-0"
@@ -237,7 +237,7 @@ export function Landing() {
                   {/* Architecture Node Diagram */}
                   <div className="flex-1 flex items-center justify-center gap-3 sm:gap-5 px-2 pt-8">
                     {/* Node 1: CLIENT */}
-                    <div className="w-[28%] max-w-[110px] h-[86px] sm:h-[96px] bg-white/95 rounded-lg shadow-xs flex flex-col items-center justify-center font-mono text-[11px] sm:text-xs font-semibold text-ink transition-transform hover:-translate-y-0.5">
+                    <div className="w-[28%] max-w-[110px] h-[86px] sm:h-[96px] bg-white/95 rounded-lg shadow-2xs flex flex-col items-center justify-center font-mono text-[11px] sm:text-xs font-semibold text-ink transition-transform hover:-translate-y-0.5">
                       <span className="text-[9px] text-ink-muted font-normal uppercase tracking-wider mb-0.5">
                         LAYER 01
                       </span>
@@ -252,7 +252,7 @@ export function Landing() {
                     </div>
 
                     {/* Node 2: API LAYER */}
-                    <div className="w-[28%] max-w-[110px] h-[86px] sm:h-[96px] bg-brand-subtle rounded-lg shadow-xs flex flex-col items-center justify-center font-mono text-[11px] sm:text-xs font-semibold text-brand-title transition-transform hover:-translate-y-0.5">
+                    <div className="w-[28%] max-w-[110px] h-[86px] sm:h-[96px] bg-brand-subtle rounded-lg shadow-2xs flex flex-col items-center justify-center font-mono text-[11px] sm:text-xs font-semibold text-brand-title transition-transform hover:-translate-y-0.5">
                       <span className="text-[9px] text-brand font-normal uppercase tracking-wider mb-0.5">
                         LAYER 02
                       </span>
@@ -267,7 +267,7 @@ export function Landing() {
                     </div>
 
                     {/* Node 3: STORAGE */}
-                    <div className="w-[28%] max-w-[110px] h-[86px] sm:h-[96px] bg-white/95 rounded-lg shadow-xs flex flex-col items-center justify-center font-mono text-[11px] sm:text-xs font-semibold text-ink transition-transform hover:-translate-y-0.5">
+                    <div className="w-[28%] max-w-[110px] h-[86px] sm:h-[96px] bg-white/95 rounded-lg shadow-2xs flex flex-col items-center justify-center font-mono text-[11px] sm:text-xs font-semibold text-ink transition-transform hover:-translate-y-0.5">
                       <span className="text-[9px] text-ink-muted font-normal uppercase tracking-wider mb-0.5">
                         LAYER 03
                       </span>
@@ -443,14 +443,14 @@ export function Landing() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/docs/run-with-docker-compose"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-border-strong text-ink text-[13px] font-semibold rounded-lg shadow-xs hover:bg-surface-warm hover:border-border-strong hover:-translate-y-0.5 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-border-strong text-ink text-[13px] font-semibold rounded-lg shadow-2xs hover:bg-surface-warm hover:border-border-strong hover:-translate-y-0.5 transition-all"
               >
                 <span>Docker Compose Guide</span>
                 <span>↗</span>
               </Link>
               <Link
                 to="/docs"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-[13px] font-semibold rounded-lg shadow-xs hover:bg-ink-hover hover:-translate-y-0.5 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-[13px] font-semibold rounded-lg shadow-2xs hover:bg-ink-hover hover:-translate-y-0.5 transition-all"
               >
                 <span>Explore Full Documentation</span>
                 <span>↗</span>
@@ -471,14 +471,14 @@ export function Landing() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-ink text-white text-sm font-semibold rounded-lg shadow-xs hover:bg-ink-hover hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-ink text-white text-sm font-semibold rounded-lg shadow-2xs hover:bg-ink-hover hover:-translate-y-0.5 transition-all"
             >
               <span>Explore your workspace</span>
               <span>↗</span>
             </Link>
             <Link
               to="/docs"
-              className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-border-strong text-ink text-sm font-semibold rounded-lg shadow-xs hover:bg-surface-warm hover:border-border-strong transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-border-strong text-ink text-sm font-semibold rounded-lg shadow-2xs hover:bg-surface-warm hover:border-border-strong transition-all"
             >
               <span>Read the documentation</span>
             </Link>

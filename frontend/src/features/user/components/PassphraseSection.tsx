@@ -12,7 +12,7 @@ import { ProfileSectionCard } from './ProfileSectionCard';
 
 const MIN_PASSPHRASE_LENGTH = 8;
 const passphraseInputClass =
-  'h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink font-mono outline-none focus:bg-white focus:border-ink transition-colors';
+  'h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink font-mono outline-hidden focus:bg-white focus:border-ink transition-colors';
 
 export function PassphraseSection() {
   const { data: session } = useSession();

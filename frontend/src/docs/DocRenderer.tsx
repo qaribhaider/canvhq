@@ -115,7 +115,7 @@ export function DocRenderer({ markdown, onHeadingsExtracted }: DocRendererProps)
           return (
             <div
               key={`block-${blockIndex}`}
-              className="my-6 border border-border bg-code-bg text-slate-200 font-mono text-[11px] rounded-xl shadow-xs overflow-hidden"
+              className="my-6 border border-border bg-code-bg text-slate-200 font-mono text-[11px] rounded-xl shadow-2xs overflow-hidden"
             >
               {/* Header Bar */}
               <div className="flex items-center justify-between px-3.5 py-2 bg-ink border-b border-code-border text-ink-subtle text-[10px]">

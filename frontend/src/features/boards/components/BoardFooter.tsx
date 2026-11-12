@@ -11,7 +11,7 @@ interface BoardFooterProps {
 
 export function BoardFooter({ isViewer, accessRole, isGridOn }: BoardFooterProps) {
   return (
-    <footer className="h-9 w-full bg-white/95 backdrop-blur-md border-t border-border grid grid-cols-2 md:grid-cols-5 divide-x divide-border font-mono text-[11px] text-ink-muted z-20 flex-shrink-0">
+    <footer className="h-9 w-full bg-white/95 backdrop-blur-md border-t border-border grid grid-cols-2 md:grid-cols-5 divide-x divide-border font-mono text-[11px] text-ink-muted z-20 shrink-0">
       <div className="flex items-center gap-2 px-3 py-1">
         <span className={`w-1.5 h-1.5 ${isViewer ? 'bg-amber-500' : 'bg-success'} rounded-full`} />
         <span className="text-ink font-medium">

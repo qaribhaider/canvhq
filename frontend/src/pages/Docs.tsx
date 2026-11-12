@@ -126,7 +126,7 @@ export function Docs() {
       </div>
 
       {/* Main 3-Column Documentation Hub (94rem max width matching Canvas page) */}
-      <div className="flex-1 w-full max-w-[94rem] mx-auto md:pt-14 sm:md:pt-16 flex items-start">
+      <div className="flex-1 w-full max-w-376 mx-auto md:pt-14 sm:md:pt-16 flex items-start">
         {/* Left Sidebar: Grouped Category Navigation */}
         <aside
           className={`${
@@ -142,7 +142,7 @@ export function Docs() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search documentation..."
-                className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-border-strong rounded-lg focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand-tile transition-all placeholder:text-ink-subtle font-mono text-ink"
+                className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-border-strong rounded-lg focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand-tile transition-all placeholder:text-ink-subtle font-mono text-ink"
               />
               {searchQuery && (
                 <button
@@ -200,7 +200,7 @@ export function Docs() {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className={`block px-2.5 py-1.5 transition-all text-xs rounded-md ${
                                   isActive
-                                    ? 'bg-ink text-white font-semibold shadow-xs'
+                                    ? 'bg-ink text-white font-semibold shadow-2xs'
                                     : 'text-ink-muted hover:text-ink hover:bg-surface-2'
                                 }`}
                               >

@@ -144,7 +144,7 @@ export function DeleteAccountModal({ onClose }: DeleteAccountModalProps) {
                           onChange={(e) =>
                             setChosenSuccessors((prev) => ({ ...prev, [ws.id]: e.target.value }))
                           }
-                          className="h-8 px-2.5 pr-8 bg-white border border-border rounded-lg text-xs text-ink outline-none appearance-none cursor-pointer"
+                          className="h-8 px-2.5 pr-8 bg-white border border-border rounded-lg text-xs text-ink outline-hidden appearance-none cursor-pointer"
                           style={selectChevronStyle}
                         >
                           {ws.otherMembers.map((m) => (
@@ -196,7 +196,7 @@ export function DeleteAccountModal({ onClose }: DeleteAccountModalProps) {
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
               placeholder="DELETE"
-              className="h-9 px-3 bg-paper border border-border rounded-xl text-xs font-mono text-ink outline-none focus:bg-white focus:border-danger"
+              className="h-9 px-3 bg-paper border border-border rounded-xl text-xs font-mono text-ink outline-hidden focus:bg-white focus:border-danger"
             />
           </div>
 

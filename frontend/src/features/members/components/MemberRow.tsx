@@ -55,7 +55,7 @@ export function MemberRow({
             aria-label={`Role for ${member.name || member.email}`}
             value={member.role}
             onChange={(e) => onRoleChange(e.target.value)}
-            className="bg-paper border border-border font-mono text-[11px] text-ink px-2.5 py-1 pr-8 rounded-md outline-none appearance-none cursor-pointer"
+            className="bg-paper border border-border font-mono text-[11px] text-ink px-2.5 py-1 pr-8 rounded-md outline-hidden appearance-none cursor-pointer"
             style={selectChevronStyle}
           >
             <option value="admin">Admin</option>

@@ -31,7 +31,7 @@ export function AppHeader({
         className,
       )}
     >
-      <div className="h-14 sm:h-16 w-full max-w-[94rem] mx-auto px-4 sm:px-8 flex items-center justify-between">
+      <div className="h-14 sm:h-16 w-full max-w-376 mx-auto px-4 sm:px-8 flex items-center justify-between">
         <div className="flex items-center gap-4 sm:gap-8">
           <Link to={homePath} className="flex items-center gap-2.5 group" aria-label="CanvHQ home">
             <CanvLogo className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />

@@ -55,7 +55,7 @@ export function PersonalInfoSection() {
               value={name}
               onChange={(e) => setDraftName(e.target.value)}
               required
-              className="h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink outline-none focus:bg-white focus:border-ink transition-colors"
+              className="h-9 px-3 bg-paper border border-border rounded-xl text-xs text-ink outline-hidden focus:bg-white focus:border-ink transition-colors"
             />
           </div>
 
