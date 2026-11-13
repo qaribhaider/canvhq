@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/qaribhaider/canvhq/compare/v0.2.3...v0.2.4) (2026-11-13)
+
+
+### Maintenance
+
+* build the release image natively for each architecture ([#48](https://github.com/qaribhaider/canvhq/issues/48)) ([05e5119](https://github.com/qaribhaider/canvhq/commit/05e511949f33260fd6ea65c975e8a55374facaaa))
+
 ## [0.2.3](https://github.com/qaribhaider/canvhq/compare/v0.2.2...v0.2.3) (2026-11-12)
 
 
